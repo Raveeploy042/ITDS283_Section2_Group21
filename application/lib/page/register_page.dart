@@ -26,8 +26,8 @@ class _RegisterState extends State<Register> {
                 ),),
               SizedBox(height: 30),
               Container(
-                height: 70,
-                width: 233,
+                height: 50,
+                width: 182,
                 child: ElevatedButton(
                   onPressed: () {}, // Enable the button
                   style: ElevatedButton.styleFrom(
@@ -39,14 +39,14 @@ class _RegisterState extends State<Register> {
                     "Register",
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize:24 ),
+                      fontSize:20 ),
                   ),
                 ),
               ),
               SizedBox(height: 30),
               Container(
-                height:70,
-                width: 233,
+                height:50,
+                width: 182,
                 child: ElevatedButton(
                   onPressed: (){},
                   style: ElevatedButton.styleFrom(
@@ -59,7 +59,7 @@ class _RegisterState extends State<Register> {
                     "Back",
                     style: TextStyle(
                       color: Color(0xFF3C40C6),
-                      fontSize:24 ),),
+                      fontSize:20 ),),
                 ),
               ),
             ],
