@@ -26,52 +26,86 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontSize: 36, color: Colors.white),
               ),
               SizedBox(height: 30),
-              Text(
-              'Username',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.all(15),
-                hintText: 'Enter your username',
-                hintStyle: const TextStyle(
-                  color: Color(0xffDDDADA),
-                  fontSize: 14,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Username',
+                    style: TextStyle(
+                      color: Colors.white, 
+                      fontSize: 16
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  SizedBox(
+                    width: 250,
+                    height: 50,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.all(15),
+                        hintText: 'Enter your username',
+                        hintStyle: const TextStyle(
+                          color: Color(0xffDDDADA),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              // Password
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Password',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  SizedBox(height: 8),
+                  SizedBox(
+                    width: 250,
+                    height: 50,
+                    child: TextField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.all(15),
+                        hintText: 'Enter your password',
+                        hintStyle: const TextStyle(
+                          color: Color(0xffDDDADA),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'forget password?',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(' Click', style: TextStyle(color: Color(0xffFFFC3D))),
+                  ],
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            // Password
-            Text(
-              'Password',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.all(15),
-                hintText: 'Enter your password',
-                hintStyle: const TextStyle(
-                  color: Color(0xffDDDADA),
-                  fontSize: 14,
-                ),
-              ),
-            ),
-              Row(children: [Text('forget password?'), Text(' Click')]),
+              SizedBox(height: 8),
               Container(
                 height: 50,
                 width: 182,

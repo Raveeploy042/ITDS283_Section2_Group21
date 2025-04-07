@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (context, index) {
                 return Card(
                   margin: const EdgeInsets.all(8),
+                  shadowColor: Colors.black,
                   child: Container(
                     width: 150,
                     padding: const EdgeInsets.all(12),

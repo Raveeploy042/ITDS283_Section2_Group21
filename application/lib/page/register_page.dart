@@ -23,7 +23,107 @@ class _RegisterState extends State<Register> {
                 style: TextStyle(
                   fontSize: 36,
                   color: Colors.white
-                ),),
+                ),
+              ),
+              SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Username',
+                    style: TextStyle(
+                      color: Colors.white, 
+                      fontSize: 16
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  SizedBox(
+                    width: 250,
+                    height: 50,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.all(15),
+                        hintText: 'Enter your username',
+                        hintStyle: const TextStyle(
+                          color: Color(0xffDDDADA),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15),
+              // Password
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Password',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  SizedBox(height: 8),
+                  SizedBox(
+                    width: 250,
+                    height: 50,
+                    child: TextField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.all(15),
+                        hintText: 'Enter your password',
+                        hintStyle: const TextStyle(
+                          color: Color(0xffDDDADA),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Confirm Password',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  SizedBox(height: 8),
+                  SizedBox(
+                    width: 250,
+                    height: 50,
+                    child: TextField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.all(15),
+                        hintText: 'Enter your confirm password',
+                        hintStyle: const TextStyle(
+                          color: Color(0xffDDDADA),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 30),
               Container(
                 height: 50,
@@ -43,7 +143,7 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 15),
               Container(
                 height:50,
                 width: 182,
