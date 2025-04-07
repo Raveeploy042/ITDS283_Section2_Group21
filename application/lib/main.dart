@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '/page/Welcome.dart';
 import '/page/login_page.dart';
-import 'package:application/page/cart_page.dart';
+import '/page/register_page.dart';
 
 
 void main() {
@@ -24,10 +24,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Somboonphanit Application',
       routes: {
         '/': (context) => Welcome(),
         '/login': (context) => LoginPage(),
+        '/register': (context) => Register(),
+        
         // '/register': (context) => null,
         // '/page3': (context) => Page3(),
         // '/page4': (context) => Page4(),
