@@ -71,95 +71,155 @@ class ListHistory extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          actions: [
-            IconButton(onPressed: null, icon: Icon(Icons.arrow_back))
-          ],
-          title: const Text('ประวัติคำสั่งซื้อ')
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context); // or your custom logic
+            },
+          ),
+          title: const Text('ประวัติคำสั่งซื้อ'),
+          centerTitle: true,
         ),
-        body: ListView.separated(
-          padding: const EdgeInsets.all(16),
-          itemCount: _orders.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 20),
-          itemBuilder: (context, index) {
-            final dateGroup = _orders[index];
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // วันที่
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
-                    _formatDate(dateGroup['date']),
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+        body: Column(
+          children: [
+            Center(
+              child: Container(
+                height: 45,
+                width: 313,
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                      
                     ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.all(15),
+                    hintText: 'Search Pancake',
+                    hintStyle:
+                        const TextStyle(color: Color(0xffDDDADA), fontSize: 14),
+                    suffixIcon: IconButton(
+                        onPressed: () {}, icon: Icon(Icons.search)),
                   ),
                 ),
-      
-                // รายการคำสั่งซื้อ
-                ...dateGroup['orders'].map<Widget>(
-                  (order) => Card(
-                    color: Color(0xFF3C40C6),
-                    elevation: 2,
-                    margin: const EdgeInsets.only(bottom: 8),
-                    child: InkWell(
-                      onTap: () {}, // เพิ่มการทำงานเมื่อกดดูรายละเอียด
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+            ),
+            Expanded(
+              child: ListView.separated(
+                padding: const EdgeInsets.all(16),
+                itemCount: _orders.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 20),
+                itemBuilder: (context, index) {
+                  final dateGroup = _orders[index];
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // วันที่
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          _formatDate(dateGroup['date']),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+              
+                      // รายการคำสั่งซื้อ
+                      ...dateGroup['orders'].map<Widget>(
+                        (order) => Card(
+                          color: Color(0xFF3C40C6),
+                          elevation: 2,
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: InkWell(
+                            onTap: () {}, // เพิ่มการทำงานเมื่อกดดูรายละเอียด
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Order No. ${order['orderNo']}',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                  Container(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Order No. ${order['orderNo']}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          '฿${order['total'].toStringAsFixed(2)}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Text(
-                                    '฿${order['total'].toStringAsFixed(2)}',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.green,
+                                  const SizedBox(height: 8),
+                                  Text('ชื่อลูกค้า : ${order['customer']}'),
+                                  Text('ผู้จัดส่ง : ${order['deliveryUser']}'),
+                                  Text('จำนวนสินค้า ${order['itemCount']} รายการ'),
+                                  const SizedBox(height: 8),
+                                  ...order['products']
+                                      .take(2)
+                                      .map<Widget>(
+                                        (p) => Text(
+                                          '• $p',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                  if (order['products'].length > 2)
+                                    const Text(
+                                      '• ...',
+                                      style: TextStyle(color: Colors.white),
                                     ),
-                                  ),
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            Text('ชื่อลูกค้า : ${order['customer']}'),
-                            Text('ผู้จัดส่ง : ${order['deliveryUser']}'),
-                            Text('จำนวนสินค้า ${order['itemCount']} รายการ'),
-                            const SizedBox(height: 8),
-                            ...order['products']
-                                .take(2)
-                                .map<Widget>(
-                                  (p) => Text(
-                                    '• $p',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                            if (order['products'].length > 2)
-                              const Text(
-                                '• ...',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            Center(
+              child: Container(
+                height: 40,
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  'กดที่ใบคำสั่งซื้อเพื่อดูรายละเอียด',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 16
                   ),
                 ),
-              ],
-            );
-          },
+              )
+            )
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'home'
+            ),
+            BottomNavigationBarItem(icon: 
+            Icon(Icons.search),
+            label: 'search')
+
+          ],
+          onTap: null,
         ),
       ),
     );

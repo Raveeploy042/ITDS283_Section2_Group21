@@ -9,8 +9,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        backgroundColor: Color(0xFF3C40C6),
-        title: Container(
+      backgroundColor: Color(0xFF3C40C6),
+      title: GestureDetector(
+        onTap: null,
+        child: Container(
           height: 40,
           padding: EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
@@ -19,30 +21,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           child: Row(
             children: [
-              Expanded(
-                child: 
-                  Container(
-                    color: Colors.white,
-                  )
-              ),
+              Expanded(child: Container(color: Colors.white)),
               SizedBox(width: 8),
               Icon(Icons.search, color: Colors.grey),
             ],
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart ,
-            color: Colors.white,
-            size: 32,
-            ),
-            onPressed: () {
-              // 👉 ไปยังหน้ารถเข็น
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
-            },
-          ),
-        ],
-      );
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 32),
+          onPressed: () {
+            // 👉 ไปยังหน้ารถเข็น
+            // Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
+          },
+        ),
+      ],
+    );
   }
 
   @override
