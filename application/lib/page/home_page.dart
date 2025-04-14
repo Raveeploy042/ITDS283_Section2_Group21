@@ -32,89 +32,133 @@ class _HomePageState extends State<HomePage> {
       title: 'Home Page',
       home: Scaffold(
         appBar: appBar(),
-        body: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            // ส่วนประวัติคำสั่งซื้อ
-            const ListTile(
-              title: Text(
-                'ประวัติคำสั่งซื้อ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              trailing: Icon(Icons.arrow_forward),
-            ),
-
-            // ส่วนสินค้าแนะนำ
-            const SizedBox(height: 20),
-            const Text(
-              'สินค้าแนะนำ',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 180,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: recommendedProducts.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    margin: const EdgeInsets.all(8),
-                    shadowColor: Colors.black,
-                    child: Container(
-                      width: 150,
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  spacing: 20,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(11),
+                      width: 168,
+                      height: 74,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF3C40C6),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        spacing: 10,
                         children: [
-                          Container(
-                            height: 100,
-                            color: Colors.grey[200],
-                            child: const Icon(Icons.image, size: 50),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'รายการสินค้า',
+                                style: TextStyle(color: Colors.white,fontSize: 18),
+                              ),
+                              Text(
+                                'ในรถเข็น',
+                                style: TextStyle(color: Colors.white,fontSize: 18),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            recommendedProducts[index]['name']!,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            recommendedProducts[index]['price']!,
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
+                          Icon(Icons.shopping_cart_outlined, color: Colors.white,size: 30,),
                         ],
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
-
-            // ส่วนประเภทสินค้า
-            const SizedBox(height: 20),
-            const Text(
-              'ประเภทสินค้า',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 2.5,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-              ),
-              itemCount: productCategories.length,
-              itemBuilder: (context, index) {
-                return ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[50],
-                    foregroundColor: Colors.blue[800],
+                    Container(
+                      width: 168,
+                      height: 74,
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF3C40C6),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        spacing: 10,
+                        children: [
+                          Text('ประวัติคำสั่งซื้อ',
+                          style: TextStyle(color: Colors.white),),
+                          Icon(Icons.receipt_long,color: Colors.white, size: 30,),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'สินค้าแนะนำ',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 180,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: recommendedProducts.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        margin: const EdgeInsets.all(8),
+                        child: Container(
+                          width: 120,
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 100,
+                                color: Colors.grey[200],
+                                child: const Icon(Icons.image, size: 92),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                recommendedProducts[index]['name']!,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                recommendedProducts[index]['price']!,
+                                style: TextStyle(color: Colors.grey[600]),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  onPressed: () {},
-                  child: Text(productCategories[index]),
-                );
-              },
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'ประเภทสินค้า',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 2.5,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                  ),
+                  itemCount: productCategories.length,
+                  itemBuilder: (context, index) {
+                    return ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[50],
+                        foregroundColor: Colors.blue[800],
+                      ),
+                      onPressed: () {},
+                      child: Text(productCategories[index]),
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -122,39 +166,31 @@ class _HomePageState extends State<HomePage> {
 
   AppBar appBar() {
     return AppBar(
-        backgroundColor: Color(0xFF3C40C6),
-        title: Container(
-          height: 40,
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: 
-                  Container(
-                    color: Colors.white,
-                  )
-              ),
-              SizedBox(width: 8),
-              Icon(Icons.search, color: Colors.grey),
-            ],
-          ),
+      backgroundColor: Color(0xFF3C40C6),
+      title: Container(
+        height: 40,
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart ,
-            color: Colors.white,
-            size: 32,
-            ),
-            onPressed: () {
-              // 👉 ไปยังหน้ารถเข็น
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
-            },
-          ),
-        ],
-      );
+        child: Row(
+          children: [
+            Expanded(child: Container(color: Colors.white)),
+            SizedBox(width: 8),
+            Icon(Icons.search, color: Colors.grey),
+          ],
+        ),
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 32),
+          onPressed: () {
+            // 👉 ไปยังหน้ารถเข็น
+            // Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
+          },
+        ),
+      ],
+    );
   }
 }
