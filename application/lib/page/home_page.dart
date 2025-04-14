@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '/material/custom_appbar.dart';
+import '/material/bottom_navbar.dart';
 
 void main(List<String> args) {
   runApp(HomePage());
@@ -31,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     return MaterialApp(
       title: 'Home Page',
       home: Scaffold(
-        appBar: appBar(),
+        appBar: CustomAppBar(),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -161,36 +163,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-    );
-  }
-
-  AppBar appBar() {
-    return AppBar(
-      backgroundColor: Color(0xFF3C40C6),
-      title: Container(
-        height: 40,
-        padding: EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Row(
-          children: [
-            Expanded(child: Container(color: Colors.white)),
-            SizedBox(width: 8),
-            Icon(Icons.search, color: Colors.grey),
-          ],
-        ),
-      ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 32),
-          onPressed: () {
-            // 👉 ไปยังหน้ารถเข็น
-            // Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
-          },
-        ),
-      ],
     );
   }
 }

@@ -10,6 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.18.1 # or latest version
+  google_maps_flutter: ^2.5.0
+  geolocator: ^11.0.0
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:

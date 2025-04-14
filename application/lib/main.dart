@@ -2,39 +2,22 @@ import 'package:flutter/material.dart';
 import '/page/Welcome.dart';
 import '/page/login_page.dart';
 import '/page/register_page.dart';
+import '/page/cart_page.dart';
+import '/page/map_page.dart';
 
 
-void main() {
+void main(List<String> args) {
   runApp(const MyApp());
 }
-class MyApp extends StatefulWidget {
+
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
-
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index; // อัปเดตหน้าที่เลือก
-  //   });
-  // }
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Somboonphanit Application',
-      routes: {
-        '/': (context) => Welcome(),
-        '/login': (context) => LoginPage(),
-        '/register': (context) => Register(),
-        
-        // '/register': (context) => null,
-        // '/page3': (context) => Page3(),
-        // '/page4': (context) => Page4(),
-        // '/page5': (context) => Page5(),
-      },
+      title: 'Cart Demo',
+      home: CartPage(),
     );
   }
 }
