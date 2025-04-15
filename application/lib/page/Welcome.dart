@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'login_page.dart';
 import 'register_page.dart';
-void main(List<String> args) {
-  runApp(Welcome());
-}
+
 
 class Welcome extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Welcome Page',
-      home: Scaffold(
+    return Scaffold(
         backgroundColor: Color(0xFF3C40C6) ,
         body: Center(
           child: Column(
@@ -64,7 +60,6 @@ class Welcome extends StatelessWidget{
             ],
           ),
         )
-      ),
     );
   }
 }

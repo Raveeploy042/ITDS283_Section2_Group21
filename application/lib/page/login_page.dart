@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main(List<String> args) {
-  runApp(LoginPage());
-}
-
 class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -13,9 +9,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return MaterialApp(
-      title: 'Login Page',
-      home: Scaffold(
+    return Scaffold(
         backgroundColor: Color(0xFF3C40C6),
         body: Center(
           child: Column(
@@ -147,7 +141,6 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ),
-      ),
     );
   }
 }

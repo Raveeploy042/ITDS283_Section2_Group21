@@ -7,9 +7,6 @@ import 'profile_page.dart';
 import 'home_page.dart';
 import 'cart_page.dart';
 
-void main(List<String> args) {
-  runApp(ListHistory());
-}
 
 class ListHistory extends StatefulWidget {
   @override
@@ -94,8 +91,7 @@ class _ListHistoryState extends State<ListHistory> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -244,7 +240,6 @@ class _ListHistoryState extends State<ListHistory> {
         //   onTap: ,
   
         // ),
-      ),
     );
   }
 }

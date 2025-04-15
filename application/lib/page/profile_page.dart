@@ -6,8 +6,7 @@ class ProfilePage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF3C40C6),
         ),
@@ -161,7 +160,6 @@ class ProfilePage extends StatelessWidget{
             ],
           ),
         ),
-      ),
     );
   }
 }

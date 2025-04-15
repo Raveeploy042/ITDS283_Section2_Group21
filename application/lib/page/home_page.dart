@@ -30,9 +30,7 @@ class _HomePageState extends State<HomePage> {
   ];
   Widget build(BuildContext context) {
     // TODO: implement build
-    return MaterialApp(
-      title: 'Home Page',
-      home: Scaffold(
+    return Scaffold(
         appBar: CustomAppBar(),
         body: SingleChildScrollView(
           child: Padding(
@@ -162,7 +160,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-      ),
     );
   }
 }
