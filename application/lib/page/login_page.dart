@@ -6,6 +6,45 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+    //Controller สำหรับรับค่าจาก TextField
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  // ฟังก์ชันสำหรับตรวจสอบการยืนยันตัวตน
+  void _login() {
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+
+    // ตรวจสอบว่า username หรือ password ว่างหรือไม่
+    if (username.isEmpty || password.isEmpty) {
+      _showDialog('กรุณากรอกข้อมูลให้ครบถ้วน');
+    } else if (username == 'admin' && password == 'password123') {
+      // ถ้าข้อมูลตรงกับที่กำหนด (สามารถเปลี่ยนเป็นการตรวจสอบจาก API ได้)
+      _showDialog('เข้าสู่ระบบสำเร็จ!');
+    } else {
+      // หากข้อมูลไม่ตรง
+      _showDialog('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+    }
+  }
+
+  // ฟังก์ชันสำหรับแสดง AlertDialog
+  void _showDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('ผลการตรวจสอบ'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // ปิด Dialog
+            },
+            child: Text('ตกลง'),
+          ),
+        ],
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -104,7 +143,9 @@ class _LoginPageState extends State<LoginPage> {
                 height: 50,
                 width: 182,
                 child: ElevatedButton(
-                  onPressed: () {}, // Enable the button
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  }, // Enable the button
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF0BE881),
                     elevation: 8, // <-- this adds the shadow
@@ -123,7 +164,9 @@ class _LoginPageState extends State<LoginPage> {
                 height: 50,
                 width: 182,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     elevation: 8, // <-- this adds the shadow

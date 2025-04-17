@@ -32,8 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 32),
           onPressed: () {
-            // 👉 ไปยังหน้ารถเข็น
-            // Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
+            Navigator.pushNamed(context, '/cart');
           },
         ),
       ],

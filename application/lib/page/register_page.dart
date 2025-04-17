@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 void main(List<String> args) {
-  runApp(Register());
+  runApp(RegisterPage());
 }
-class Register extends StatefulWidget{
+class RegisterPage extends StatefulWidget{
   @override
-  State<Register> createState() => _RegisterState();
+  State<RegisterPage> createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register> {
+class _RegisterState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -148,13 +148,14 @@ class _RegisterState extends State<Register> {
                 height:50,
                 width: 182,
                 child: ElevatedButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     elevation: 8, // <-- this adds the shadow
                     shadowColor: Colors.black.withAlpha(255), // optional: control shadow color
                   ),
-                  // () => Navigator.push(context, '/register')
                   child: Text(
                     "Back",
                     style: TextStyle(

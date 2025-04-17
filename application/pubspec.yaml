@@ -27,6 +27,8 @@ flutter:
   assets:
     - assets/Team01.jpg
     - assets/Team02.jpg
+    - assets/Cement_type.png
+    - assets/Steel_type.png
   
   fonts:
     - family: Inter

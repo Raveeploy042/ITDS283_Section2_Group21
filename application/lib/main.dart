@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import '/page/Welcome.dart';
-import '/page/login_page.dart';
-import '/page/register_page.dart';
-import '/page/cart_page.dart';
-import '/page/map_page.dart';
 
+import '/page/cart_page.dart';
+import '/page/home_page.dart';
+import '/page/invoice_page.dart';
+import '/page/list_history.dart';
+import '/page/loading_page.dart'; 
+import '/page/login_page.dart';
+import '/page/map_page.dart';
+import '/page/profile_page.dart';
+import '/page/register_page.dart';
+import '/page/team_page.dart';
+import '/page/Welcome.dart';
 
 void main(List<String> args) {
   runApp(const MyApp());
@@ -16,8 +22,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Cart Demo',
-      home: CartPage(),
+      title: 'สมบุญพาณิชย์',
+      initialRoute: '/', // ✅ เปลี่ยนเป็น route-based
+      routes: {
+        '/': (context) => LoadingPage(), // ✅ เริ่มที่ loading page
+        '/cart': (context) => CartPage(),
+        '/home': (context) => HomePage(),
+        '/login': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
+        '/map': (context) => MapPage(),
+        '/invoice': (context) => InvoicePage(),
+        '/history': (context) => ListHistory(),
+        '/profile': (context) => ProfilePage(),
+        '/team': (context) => TeamPage(),
+        '/welcome': (context) => Welcome(),
+      },
     );
   }
 }

@@ -24,7 +24,9 @@ class Welcome extends StatelessWidget{
                 height: 70,
                 width: 233,
                 child: ElevatedButton(
-                  onPressed: () {}, // Enable the button
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/login');
+                  }, // Enable the button
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     elevation: 8, // <-- this adds the shadow
@@ -43,7 +45,9 @@ class Welcome extends StatelessWidget{
                 height:70,
                 width: 233,
                 child: ElevatedButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.pushNamed(context, '/register');
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     elevation: 8, // <-- this adds the shadow

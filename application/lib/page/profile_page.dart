@@ -138,7 +138,9 @@ class ProfilePage extends StatelessWidget{
               ),
               SizedBox(height: 40),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/welcome');
+                },
                 style: TextButton.styleFrom(
                   minimumSize: Size(228,35),
                   foregroundColor: Colors.black,
