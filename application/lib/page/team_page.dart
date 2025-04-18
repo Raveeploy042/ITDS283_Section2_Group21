@@ -82,14 +82,20 @@ class TeamPage extends StatelessWidget {
                   side: BorderSide(
                     color: Color(0xFFD9D9D9)),
                 ),
-                child: 
-                Text(
-                  'กลับสู่หน้าหลัก',
-                  style: 
-                  TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold
+                child:
+                 
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+                  child: Text(
+                    'กลับสู่หน้าหลัก',
+                    style: 
+                    TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
                 )
               )

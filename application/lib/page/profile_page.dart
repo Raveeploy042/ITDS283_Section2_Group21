@@ -6,8 +6,7 @@ class ProfilePage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF3C40C6),
         ),
@@ -139,7 +138,9 @@ class ProfilePage extends StatelessWidget{
               ),
               SizedBox(height: 40),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/welcome');
+                },
                 style: TextButton.styleFrom(
                   minimumSize: Size(228,35),
                   foregroundColor: Colors.black,
@@ -161,7 +162,6 @@ class ProfilePage extends StatelessWidget{
             ],
           ),
         ),
-      ),
     );
   }
 }

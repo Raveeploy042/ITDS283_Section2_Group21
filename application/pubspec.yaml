@@ -10,6 +10,10 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.18.1 # or latest version
+  google_maps_flutter: ^2.5.0
+  geolocator: ^11.0.0
+  geocoding: ^3.0.0
+  google_maps_webservice: ^0.0.20-nullsafety.5
 
 dev_dependencies:
   flutter_test:
@@ -23,6 +27,8 @@ flutter:
   assets:
     - assets/Team01.jpg
     - assets/Team02.jpg
+    - assets/Cement_type.png
+    - assets/Steel_type.png
   
   fonts:
     - family: Inter

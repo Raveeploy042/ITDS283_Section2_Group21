@@ -1,39 +1,41 @@
 import 'package:flutter/material.dart';
-import '/page/Welcome.dart';
+
+import '/page/cart_page.dart';
+import '/page/home_page.dart';
+import '/page/invoice_page.dart';
+import '/page/list_history.dart';
+import '/page/loading_page.dart'; 
 import '/page/login_page.dart';
+import '/page/map_page.dart';
+import '/page/profile_page.dart';
 import '/page/register_page.dart';
+import '/page/team_page.dart';
+import '/page/Welcome.dart';
 
-
-void main() {
+void main(List<String> args) {
   runApp(const MyApp());
 }
-class MyApp extends StatefulWidget {
+
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
-
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index; // อัปเดตหน้าที่เลือก
-  //   });
-  // }
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Somboonphanit Application',
+      title: 'สมบุญพาณิชย์',
+      initialRoute: '/', // ✅ เปลี่ยนเป็น route-based
       routes: {
-        '/': (context) => Welcome(),
+        '/': (context) => LoadingPage(), // ✅ เริ่มที่ loading page
+        '/cart': (context) => CartPage(),
+        '/home': (context) => HomePage(),
         '/login': (context) => LoginPage(),
-        '/register': (context) => Register(),
-        
-        // '/register': (context) => null,
-        // '/page3': (context) => Page3(),
-        // '/page4': (context) => Page4(),
-        // '/page5': (context) => Page5(),
+        '/register': (context) => RegisterPage(),
+        '/map': (context) => MapPage(),
+        '/invoice': (context) => InvoicePage(),
+        '/history': (context) => ListHistory(),
+        '/profile': (context) => ProfilePage(),
+        '/team': (context) => TeamPage(),
+        '/welcome': (context) => Welcome(),
       },
     );
   }

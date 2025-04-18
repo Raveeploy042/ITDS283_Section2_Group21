@@ -1,12 +1,35 @@
 import 'package:flutter/material.dart';
 import '/page/home_page.dart';
+import '/material/bottom_navbar.dart';
 import 'package:intl/intl.dart';
 
-void main(List<String> args) {
-  runApp(ListHistory());
+import 'profile_page.dart';
+import 'home_page.dart';
+import 'cart_page.dart';
+
+
+class ListHistory extends StatefulWidget {
+  @override
+  State<ListHistory> createState() => _ListHistoryState();
 }
 
-class ListHistory extends StatelessWidget {
+class _ListHistoryState extends State<ListHistory> {
+    // รายการของหน้าแต่ละหน้า
+  // final int _selectedIndex = 0 ;
+
+  // final List<Widget> _pages = [
+  //   HomePage(),
+  //   CartPage(),
+  //   ListHistory(),
+  //   ProfilePage(),
+  // ];
+
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index; // อัปเดตหน้าที่เลือก
+  //   });
+  // }
+
   final List<Map<String, dynamic>> _orders = [
     {
       'date': DateTime.now(),
@@ -68,8 +91,7 @@ class ListHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -112,81 +134,86 @@ class ListHistory extends StatelessWidget {
                 separatorBuilder: (_, __) => const SizedBox(height: 20),
                 itemBuilder: (context, index) {
                   final dateGroup = _orders[index];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  return Row(
                     children: [
-                      // วันที่
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Text(
-                          _formatDate(dateGroup['date']),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ),
-              
-                      // รายการคำสั่งซื้อ
-                      ...dateGroup['orders'].map<Widget>(
-                        (order) => Card(
-                          color: Color(0xFF3C40C6),
-                          elevation: 2,
-                          margin: const EdgeInsets.only(bottom: 8),
-                          child: InkWell(
-                            onTap: () {}, // เพิ่มการทำงานเมื่อกดดูรายละเอียด
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Order No. ${order['orderNo']}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        Text(
-                                          '฿${order['total'].toStringAsFixed(2)}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color: Colors.green,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text('ชื่อลูกค้า : ${order['customer']}'),
-                                  Text('ผู้จัดส่ง : ${order['deliveryUser']}'),
-                                  Text('จำนวนสินค้า ${order['itemCount']} รายการ'),
-                                  const SizedBox(height: 8),
-                                  ...order['products']
-                                      .take(2)
-                                      .map<Widget>(
-                                        (p) => Text(
-                                          '• $p',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                  if (order['products'].length > 2)
-                                    const Text(
-                                      '• ...',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                ],
+                      Image(image: AssetImage('assets/Team01.jpg')),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // วันที่
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Text(
+                              _formatDate(dateGroup['date']),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
                               ),
                             ),
                           ),
-                        ),
+                                    
+                          // รายการคำสั่งซื้อ
+                          ...dateGroup['orders'].map<Widget>(
+                            (order) => Card(
+                              color: Color(0xFF3C40C6),
+                              elevation: 2,
+                              margin: const EdgeInsets.only(bottom: 8),
+                              child: InkWell(
+                                onTap: () {}, // เพิ่มการทำงานเมื่อกดดูรายละเอียด
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Order No. ${order['orderNo']}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            Text(
+                                              '฿${order['total'].toStringAsFixed(2)}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text('ชื่อลูกค้า : ${order['customer']}'),
+                                      Text('ผู้จัดส่ง : ${order['deliveryUser']}'),
+                                      Text('จำนวนสินค้า ${order['itemCount']} รายการ'),
+                                      const SizedBox(height: 8),
+                                      ...order['products']
+                                          .take(2)
+                                          .map<Widget>(
+                                            (p) => Text(
+                                              '• $p',
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                          ),
+                                      if (order['products'].length > 2)
+                                        const Text(
+                                          '• ...',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   );
@@ -208,20 +235,11 @@ class ListHistory extends StatelessWidget {
             )
           ],
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'home'
-            ),
-            BottomNavigationBarItem(icon: 
-            Icon(Icons.search),
-            label: 'search')
-
-          ],
-          onTap: null,
-        ),
-      ),
+        // bottomNavigationBar: MyBottomNavBar(
+        //   currentIndex: ,
+        //   onTap: ,
+  
+        // ),
     );
   }
 }

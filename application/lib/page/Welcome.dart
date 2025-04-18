@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'login_page.dart';
 import 'register_page.dart';
-void main(List<String> args) {
-  runApp(Welcome());
-}
+
 
 class Welcome extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Welcome Page',
-      home: Scaffold(
+    return Scaffold(
         backgroundColor: Color(0xFF3C40C6) ,
         body: Center(
           child: Column(
@@ -28,7 +24,9 @@ class Welcome extends StatelessWidget{
                 height: 70,
                 width: 233,
                 child: ElevatedButton(
-                  onPressed: () {}, // Enable the button
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/login');
+                  }, // Enable the button
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     elevation: 8, // <-- this adds the shadow
@@ -47,7 +45,9 @@ class Welcome extends StatelessWidget{
                 height:70,
                 width: 233,
                 child: ElevatedButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.pushNamed(context, '/register');
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     elevation: 8, // <-- this adds the shadow
@@ -64,7 +64,6 @@ class Welcome extends StatelessWidget{
             ],
           ),
         )
-      ),
     );
   }
 }
