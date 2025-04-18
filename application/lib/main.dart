@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-
 import '/page/cart_page.dart';
 import '/page/home_page.dart';
 import '/page/invoice_page.dart';
 import '/page/list_history.dart';
 import '/page/loading_page.dart'; 
 import '/page/login_page.dart';
+import '/page/main_screen.dart';
 import '/page/map_page.dart';
 import '/page/profile_page.dart';
 import '/page/register_page.dart';
 import '/page/team_page.dart';
 import '/page/Welcome.dart';
 
-void main(List<String> args) {
+void main(List<String> args) async{
   runApp(const MyApp());
 }
 
@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/', // ✅ เปลี่ยนเป็น route-based
       routes: {
         '/': (context) => LoadingPage(), // ✅ เริ่มที่ loading page
+        '/main' : (context) => MainScreen(),
         '/cart': (context) => CartPage(),
         '/home': (context) => HomePage(),
         '/login': (context) => LoginPage(),

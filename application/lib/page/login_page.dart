@@ -144,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                 width: 182,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/home');
+                    Navigator.pushNamed(context, '/main');
                   }, // Enable the button
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF0BE881),

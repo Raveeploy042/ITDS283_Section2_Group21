@@ -41,161 +41,184 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context); // or your custom logic
-            },
-          ),
-          title: const Text('รายการสินค้าในรถเข็น'),
-          centerTitle: true,
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // or your custom logic
+          },
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // รายการสินค้า
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _products.length,
-                separatorBuilder: (_, __) => const Divider(),
-                itemBuilder: (context, index) {
-                  final item = _products[index];
-                  return ListTile(
-                    title: Text(
-                      item['name'],
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(item['spec']),
-                        Text('${item['price']}B/หน่วย'),
-                      ],
-                    ),
-                    trailing: Text('จำนวน ${item['quantity']}'),
-                  );
-                },
-              ),
+        title: const Text('รายการสินค้าในรถเข็น'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // รายการสินค้า
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _products.length,
+              separatorBuilder: (_, __) => const Divider(),
+              itemBuilder: (context, index) {
+                final item = _products[index];
+                return ListTile(
+                  title: Text(
+                    item['name'],
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(item['spec']),
+                      Text('${item['price']}B/หน่วย'),
+                    ],
+                  ),
+                  trailing: Text('จำนวน ${item['quantity']}'),
+                );
+              },
+            ),
 
-              const SizedBox(height: 20),
-              // ข้อมูลลูกค้า
-              const Text(
+            const SizedBox(height: 20),
+            // ข้อมูลลูกค้า
+            Container(
+              height: 42,
+              width: 240,
+
+              child: const Text(
                 'ชื่อลูกค้า : คุณทฤษฎี',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
+            ),
 
-              const SizedBox(height: 20),
-              // ประเภทการจัดส่ง
-              const Text(
-                'ประเภทการจัดส่ง',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              RadioListTile(
-                title: const Text('รับสินค้าที่หน้าร้าน'),
-                value: 'pickup',
-                groupValue: _deliveryOption,
-                onChanged:
-                    (value) =>
-                        setState(() => _deliveryOption = value.toString()),
-              ),
-              RadioListTile(
-                title: const Text('บริการจัดส่งสินค้า'),
-                value: 'delivery',
-                groupValue: _deliveryOption,
-                onChanged: (value) async {
-                  setState(() => _deliveryOption = value.toString());
+            const SizedBox(height: 20),
+            // ประเภทการจัดส่ง
+            const Text(
+              'ประเภทการจัดส่ง',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            RadioListTile(
+              title: const Text('รับสินค้าที่หน้าร้าน'),
+              value: 'pickup',
+              groupValue: _deliveryOption,
+              onChanged:
+                  (value) => setState(() => _deliveryOption = value.toString()),
+            ),
+            RadioListTile(
+              title: const Text('บริการจัดส่งสินค้า'),
+              value: 'delivery',
+              groupValue: _deliveryOption,
+              onChanged: (value) async {
+                setState(() => _deliveryOption = value.toString());
 
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MapPage()),
-                  );
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapPage()),
+                );
 
-                  if (result != null && result is String) {
-                    setState(() => _deliveryAddress = result);
-                  }
-                },
-              ),
-              if (_deliveryOption == 'delivery' && _deliveryAddress != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: 28.0),
+                if (result != null && result is String) {
+                  setState(() => _deliveryAddress = result);
+                }
+              },
+            ),
+            if (_deliveryOption == 'delivery' && _deliveryAddress != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 28.0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {});
+                  },
                   child: Text('สถานที่: $_deliveryAddress'),
                 ),
-              
-              const SizedBox(height: 20),
-              // สรุปคำสั่งซื้อ
-              const Text(
-                'สินค้ารวม ${3} รายการ',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              Table(
-                columnWidths: const {
-                  0: FlexColumnWidth(1),
-                  1: FlexColumnWidth(3),
-                  2: FlexColumnWidth(2),
-                },
-                children: [
-                  const TableRow(
-                    children: [
-                      Text(
-                        'จำนวน',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'สินค้า',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'ราคา',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  ..._products.map(
-                    (item) => TableRow(
-                      children: [
-                        Text('${item['quantity']}'),
-                        Text(item['name']),
-                        Text(
-                          '${(item['price'] * item['quantity']).toStringAsFixed(2)}B',
-                        ),
-                      ],
-                    ),
-                  ),
-                  TableRow(
-                    children: [
-                      const Text(
-                        'รวม',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const Text(''),
-                      Text(
-                        '${_totalPrice.toStringAsFixed(2)}B',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ],
               ),
 
-              const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  onPressed: () {},
-                  child: const Text('ยืนยันคำสั่งซื้อ'),
+            const SizedBox(height: 20),
+            // สรุปคำสั่งซื้อ
+            const Text(
+              'สินค้ารวม ${3} รายการ',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            Table(
+              columnWidths: const {
+                0: FlexColumnWidth(1),
+                1: FlexColumnWidth(3),
+                2: FlexColumnWidth(2),
+              },
+              children: [
+                const TableRow(
+                  children: [
+                    Text(
+                      'จำนวน',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'สินค้า',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text('ราคา', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ],
                 ),
-              ),
-            ],
-          ),
+                ..._products.map(
+                  (item) => TableRow(
+                    children: [
+                      Text('${item['quantity']}'),
+                      Text(item['name']),
+                      Text(
+                        '${(item['price'] * item['quantity']).toStringAsFixed(2)}B',
+                      ),
+                    ],
+                  ),
+                ),
+                TableRow(
+                  children: [
+                    const Text(
+                      'รวม',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const Text(''),
+                    Text(
+                      '${_totalPrice.toStringAsFixed(2)}B',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 30),
+            Row(
+              
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    onPressed: () {},
+                    child: const Text('ยกเลิกรายการทั้งหมด'),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shadowColor: Colors.black.withAlpha(255),
+                      backgroundColor: Color(0xFF0BE881),
+                    ),
+                    onPressed: () {},
+                    child: const Text('ยืนยันคำสั่งซื้อ'),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
+      ),
     );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '/material/custom_appbar.dart';
 import '/material/bottom_navbar.dart';
+import '/config.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 void main(List<String> args) {
   runApp(HomePage());
@@ -12,12 +15,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<dynamic> _products = [];
+  String _statusMessage = "";
+
+  Future<void> _fetchProduct() async {
+    final url = Uri.parse("${AppConfig.baseUrl}/products");
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          _products = data;
+          _statusMessage = "Loaded ${data.length} customers.";
+        });
+      } else {
+        setState(() {
+          _statusMessage = "Error: ${response.statusCode}";
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _statusMessage = "Exception: $e";
+      });
+    }
+  }
+
   @override
-  final List<Map<String, String>> recommendedProducts = [
-    {'name': 'ผู้USCG สูตรโฮม', 'price': '150B/ญา'},
-    {'name': 'เหล็กเล่นกลม', 'price': '85B/10 ม.'},
-    {'name': 'อิฐมวลแท', 'price': '35B/ห้อง'},
-  ];
+  void initState() {
+    super.initState();
+    _fetchProduct();
+  }
 
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -37,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () => Navigator.pushNamed(context, '/cart'),
                     child: Container(
                       padding: EdgeInsets.all(11),
-                      width: 175,
+                      width: 170,
                       height: 74,
                       decoration: BoxDecoration(
                         color: Color(0xFF3C40C6),
@@ -79,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                   GestureDetector(
                     onTap: () => Navigator.pushNamed(context, '/history'),
                     child: Container(
-                      width: 175,
+                      width: 170,
                       height: 74,
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -117,31 +144,109 @@ class _HomePageState extends State<HomePage> {
                 height: 180,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: recommendedProducts.length,
+                  itemCount: _products.length,
                   itemBuilder: (context, index) {
+                    // ดึงข้อมูลจาก products object
+                    var product = _products[index];
                     return Card(
                       margin: const EdgeInsets.all(8),
                       child: Container(
-                        width: 120,
-                        padding: const EdgeInsets.all(12),
+                        width: 130,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withAlpha(255),
+                              spreadRadius: 1,
+                              blurRadius: 5,
+                              offset: Offset(0, 3), // เงาแนวตั้ง
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(10),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            // แสดงรูปภาพ
                             Container(
                               height: 100,
-                              color: Colors.grey[200],
-                              child: const Icon(Icons.image, size: 92),
+                              color: Colors.white,
+                              child:
+                                  product['ImageURL'] != null
+                                      ? Image.network(
+                                        product['ImageURL'],
+                                      ) // แสดงภาพจาก URL
+                                      : const Icon(
+                                        Icons.image,
+                                        size: 92,
+                                      ), // ถ้าไม่มีรูป ให้แสดง icon แทน
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 2),
+                            // แสดงชื่อสินค้า
                             Text(
-                              recommendedProducts[index]['name']!,
+                              product['ProductName'],
+                              maxLines: 1, // จำกัดให้แสดงแค่ 1 บรรทัด
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
+                                fontFamily: 'Inter',
                                 fontWeight: FontWeight.bold,
+                                color: Colors.black,
                               ),
                             ),
-                            Text(
-                              recommendedProducts[index]['price']!,
-                              style: TextStyle(color: Colors.grey[600]),
+                            // แสดงราคา
+                            Row(
+                              spacing: 3,
+                              children: [
+                                Text(
+                                  '${product['Price']}\฿\/${product['Unit']}'
+                                              .length > 15 ? '${product['Price']}฿/${product['Unit']}'.substring(0, 15) +'...'
+                                      : '${product['Price']}฿/${product['Unit']}', // ถ้าราคามีรูปแบบเป็นตัวเลขหรือเงิน
+                                  style: TextStyle(
+                                    color: Color(0xFF3700FF),
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    // เพิ่มสินค้าเข้า cart
+                                    // setState(() {
+                                    //   cartItems.add(product);
+                                    // });
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          '${product['ProductName']} added to cart!',
+                                        ),
+                                        duration: Duration(seconds: 1),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(
+                                        0xFFD9D9D9,
+                                      ), // สีพื้นหลังวงกลม
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 5,
+                                          offset: Offset(2, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Icon(
+                                      Icons.add_shopping_cart,
+                                      color: Color(0xFF3C40C6), // สีของไอคอน
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -155,7 +260,7 @@ class _HomePageState extends State<HomePage> {
                 'ประเภทสินค้า',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 15,),
+              SizedBox(height: 15),
               Column(
                 spacing: 15,
                 children: [
