@@ -14,7 +14,7 @@ class _CartPageState extends State<CartPage> {
   final List<Map<String, dynamic>> _products = [
     {
       'name': 'ปูนทานโครงสร้าง SCG',
-      'spec': 'สูตรโฮบรด 50 กก.',
+      'spec': 'สูตรไฮบริด 50 กก.',
       'price': 150,
       'quantity': 2,
     },
@@ -25,7 +25,7 @@ class _CartPageState extends State<CartPage> {
       'quantity': 1,
     },
     {
-      'name': 'อัฐมวลเนา สราเพชร',
+      'name': 'อิฐมวลเนา สราเพชร',
       'spec': 'รุ่น 7 ชม.',
       'price': 35,
       'quantity': 10,
@@ -49,7 +49,7 @@ class _CartPageState extends State<CartPage> {
             Navigator.pop(context); // or your custom logic
           },
         ),
-        title: const Text('รายการสินค้าในรถเข็น'),
+        title: const Text('รายการสินค้าในรถเข็น', style: TextStyle(fontWeight: FontWeight.bold),),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -66,35 +66,70 @@ class _CartPageState extends State<CartPage> {
               itemBuilder: (context, index) {
                 final item = _products[index];
                 return Container(
+                  width: 372,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF3C40C6),
+                    borderRadius: BorderRadius.circular(10)
+                  ),
                   child: ListTile(
+                    leading: Container(
+                      width: 132,
+                      height: 132,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          'assets/Team02.jpg',
+                          width: 132,
+                          height: 132,
+                          fit: BoxFit.contain,),
+                      ),
+                    ),
                     title: Text(
                       item['name'],
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(item['spec']),
-                        Text('${item['price']}B/หน่วย'),
+                        Text(item['spec'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                        Text('${item['price']}B/หน่วย', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
                       ],
                     ),
-                    trailing: Text('จำนวน ${item['quantity']}'),
+                    trailing: Text('จำนวน ${item['quantity']}', style: TextStyle(color: Colors.white, fontSize: 20),),
                   ),
                 );
               },
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             // ข้อมูลลูกค้า
-            const SizedBox(
+            SizedBox(
               height: 42,
               width: 240,
-              child: const Text(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                color: Color(0xFFEEEEEE),
+                border: Border.all(
+                  color: Colors.grey,
+                  width: 2
+                  ),
+                borderRadius: BorderRadius.circular(8)
+                )
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Text(
                 'ชื่อลูกค้า : คุณทฤษฎี',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(height: 20),
+            ),
+            SizedBox(height: 20),
             // ประเภทการจัดส่ง
             const Text(
               'ประเภทการจัดส่ง',
