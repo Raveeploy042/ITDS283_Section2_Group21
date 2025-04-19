@@ -6,56 +6,197 @@ import project_crud
 app = Flask(__name__)
 CORS(app)
 
-# Create customer
-# @app.route('/products', methods=['POST'])
-# def create_customer():
-#     data = request.json
-#     customer_crud.create_customer(
-#         data['CustomerName'],
-#         data['ContactName'],
-#         data['Address'],
-#         data['City'],
-#         data['PostalCode'],
-#         data['Country']
-#     )
-#     return jsonify({'message': 'Customer created'}), 201
+# -------------------------------
+# Products Routes (CRUD)
+# -------------------------------
 
-# Read all customers
+# Get all products
 @app.route('/products', methods=['GET'])
 def get_products():
-    return jsonify(project_crud.get_all_products())
+    try:
+        products = project_crud.get_all_products()
+        return jsonify(products), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
+# Get a specific product by productID
+@app.route('/products/<int:product_id>', methods=['GET'])
+def get_product(product_id):
+    try:
+        product = project_crud.get_product(product_id)
+        if product:
+            return jsonify(product), 200
+        else:
+            return jsonify({"message": "Product not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# -------------------------------
+# Staff Routes
+# -------------------------------
+
+# Get staff by username
 @app.route('/staffs/<string:username>', methods=['GET'])
 def get_staffs(username):
-    return jsonify(project_crud.get_staff(username))
+    try:
+        staff = project_crud.get_staff(username)
+        if staff:
+            return jsonify(staff), 200
+        else:
+            return jsonify({"message": "Staff not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/staffs', methods=['POST'])
+def create_staff_api():
+    # รับข้อมูลจาก request body (ในรูปแบบ JSON)
+    data = request.json
+    
+    # ตรวจสอบว่ามีข้อมูลที่จำเป็นหรือไม่
+    name = data.get("StaffName")
+    username = data.get("username")
+    password = data.get("password")
+    
+    if not all([name, username, password]):
+        return jsonify({"error": "StaffName, username, and password are required"}), 400
+    
+    try:
+        # เรียกใช้ฟังก์ชัน create_staff จาก project_crud.py
+        project_crud.create_staff(name, username, password)
+        
+        # ส่งข้อความตอบกลับเมื่อสร้างพนักงานสำเร็จ
+        return jsonify({"message": "Staff created successfully"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-# Update customer
-# @app.route('/customers/<int:customer_id>', methods=['PUT'])
-# def update_customer(customer_id):
-#     data = request.json
-#     customer_crud.update_customer(
-#         customer_id,
-#         data['CustomerName'],
-#         data['ContactName'],
-#         data['Address'],
-#         data['City'],
-#         data['PostalCode'],
-#         data['Country']
-#     )
-#     return jsonify({'message': 'Customer updated'})
 
-# # Delete customer
-# @app.route('/customers/<int:customer_id>', methods=['DELETE'])
-# def delete_customer(customer_id):
-#     customer_crud.delete_customer(customer_id)
-#     return jsonify({'message': 'Customer deleted'})
+# -------------------------------
+# Orders Routes (CRUD)
+# -------------------------------
 
+# Create a new order
+@app.route('/orders', methods=['POST'])
+def create_order():
+    data = request.json
+    staff_id = data.get("StaffID")
+    if not staff_id:
+        return jsonify({"error": "StaffID is required"}), 400
+    
+    try:
+        project_crud.create_orders(staff_id)
+        return jsonify({"message": "Order created successfully"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Get order by OrderID
+@app.route('/orders/<int:order_id>', methods=['GET'])
+def get_order(order_id):
+    try:
+        order = project_crud.get_order(order_id)
+        if order:
+            return jsonify(order), 200
+        else:
+            return jsonify({"message": "Order not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/orders/<int:order_id>', methods=['PUT'])
+def update_order(order_id):
+    # รับข้อมูลจาก request body (ในรูปแบบ JSON)
+    data = request.json
+    
+    # ตรวจสอบข้อมูลที่จำเป็น
+    name = data.get("CustomerName")
+    transport = data.get("Transport")
+    address = data.get("Address")
+    status = data.get("Status")
+    
+    if not all([name, transport, address, status]):
+        return jsonify({"error": "CustomerName, Transport, Address, and Status are required"}), 400
+    
+    try:
+        # เรียกใช้ฟังก์ชันเพื่ออัปเดตคำสั่งซื้อในฐานข้อมูล
+        project_crud.update_orders(order_id, name, transport, address, status)
+        return jsonify({"message": "Order updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Delete order
+@app.route('/orders/<int:order_id>', methods=['DELETE'])
+def delete_order(order_id):
+    try:
+        # เรียกใช้ฟังก์ชันเพื่อทำการลบคำสั่งซื้อในฐานข้อมูล
+        project_crud.delete_orders(order_id)
+        return jsonify({"message": "Order deleted successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# -------------------------------
+# Order Items Routes (CRUD)
+# -------------------------------
+
+# Add product to order
+@app.route('/order_items', methods=['POST'])
+def create_order_item():
+    data = request.json
+    order_id = data.get("OrderID")
+    product_id = data.get("ProductID")
+    quantity = data.get("Quantity")
+    
+    if not all([order_id, product_id, quantity]):
+        return jsonify({"error": "OrderID, ProductID, and Quantity are required"}), 400
+    
+    try:
+        project_crud.create_order_item(order_id, product_id, quantity)
+        return jsonify({"message": "Product added to order"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Get all items in a specific order
+@app.route('/order_items/<int:order_id>', methods=['GET'])
+def get_order_items(order_id):
+    try:
+        order_items = project_crud.get_order_items(order_id)
+        if order_items:
+            return jsonify(order_items), 200
+        else:
+            return jsonify({"message": "No items found for this order"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Update quantity of an order item
+@app.route('/order_items/<int:order_item_id>', methods=['PUT'])
+def update_order_item(order_item_id):
+    data = request.json
+    quantity = data.get("Quantity")
+    
+    if not quantity:
+        return jsonify({"error": "Quantity is required"}), 400
+    
+    try:
+        project_crud.update_order_item(order_item_id, quantity)
+        return jsonify({"message": "Order item updated"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Delete an item from an order
+@app.route('/order_items/<int:order_item_id>', methods=['DELETE'])
+def delete_order_item(order_item_id):
+    try:
+        project_crud.delete_order_item(order_item_id)
+        return jsonify({"message": "Order item deleted"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# -------------------------------
+# Main
+# -------------------------------
 if __name__ == '__main__':
     # Get your local IP address
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
     
-    print(f"\n Flask is running! Open in browser:")
+    print(f"\n Flask is running! Open in browser: ")
     print(f"    http://{local_ip}:5000/\n")
     
     app.run(debug=True, host='0.0.0.0', port=5000)

@@ -10,7 +10,7 @@ def create_staff(name, username, password):
     """, (name, username, password))
     conn.commit()
     conn.close()
-    pass
+    
 
 def get_staff(name):
     conn = get_connection()
@@ -25,6 +25,7 @@ def get_staff(name):
     return result
 
 
+
 def get_all_products():
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
@@ -36,42 +37,109 @@ def get_all_products():
     conn.close()
     return result
 
-# def get_product(id):
-#     conn = get_connection()
-#     cursor = conn.cursor(dictionary=True)
-#     cursor.execute("""
-#     SELECT `ProductName`, Type, Brand, Price, Unit,  Location, ImageURL
-#     FROM products
-#     """)
-#     result = cursor.fetchall()
-#     conn.close()
-#     return result
 
-def create_orders(name, username, password):
+def get_product(productId):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT productID ,ProductName, Type, Brand, Price, Unit,  Location, ImageURL
+        FROM products
+        WHERE productID=%s
+    """, (productId,))
+    result = cursor.fetchone()
+    conn.close()
+    return result
+
+
+def create_orders(staffId):
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT INTO staffs (CustomerName, username, password)
-    VALUES (%s,%s, %s)
-    """, (name, username, password))
+    INSERT INTO orders (OrderDate, Status, StaffID)
+    VALUES (CURDATE(), 'still in cart', %s);
+    """, (staffId,))
     conn.commit()
     conn.close()
-    pass
-'''
-`CustomerName` varchar(255) DEFAULT NULL,
-  `OrderDate` date DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `transport` varchar(255) DEFAULT NULL,
-  `Address` varchar(255) DEFAULT NULL,
-  `StaffID` INT(11),
-  '''
 
-def get_orders(customer_id, name, contact, address, city, postal_code, country):
-    pass
+def get_order(orderId):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT OrderID, CustomerName, OrderDate, transport , Address, StaffID, CreatedAt, UpdatedAt,Status
+        FROM orders
+        WHERE OrderID=%s
+    """, (orderId,))
+    result = cursor.fetchone()
+    conn.close()
+    return result
 
-def update_orders(customer_id, name, contact, address, city, postal_code, country):
-    pass
+def update_orders(order_id, customer_name, transport, address, status):
+    conn = get_connection()
+    cursor = conn.cursor()
 
-def delete_orders(customer_id):
-    pass
+    # คำสั่ง SQL สำหรับการอัปเดตคำสั่งซื้อ
+    cursor.execute("""
+    UPDATE orders
+    SET CustomerName = %s, Transport = %s, Address = %s, Status = %s, UpdatedAt = CURRENT_TIMESTAMP
+    WHERE OrderID = %s
+    """, (customer_name, transport, address, status, order_id))
+    
+    conn.commit()
+    conn.close()
+
+def delete_orders(orderId):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM orders WHERE OrderID = %s", (orderId,))
+    conn.commit()
+    conn.close()
+
+def create_order_item(order_id, product_id, quantity):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    INSERT INTO order_items (OrderID, ProductID, Quantity)
+    VALUES (%s, %s, %s)
+    """, (order_id, product_id, quantity))
+    conn.commit()
+    conn.close()
+
+def get_order_items(order_id):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+    SELECT oi.OrderItemID, p.ProductName, oi.Quantity, p.Price
+    FROM order_items oi
+    JOIN products p ON oi.ProductID = p.productID
+    WHERE oi.OrderID = %s
+    """, (order_id,))
+    result = cursor.fetchall()
+    conn.close()
+    return result
+
+def update_order_item(order_item_id, quantity):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    UPDATE order_items
+    SET Quantity = %s
+    WHERE OrderItemID = %s
+    """, (quantity, order_item_id))
+    conn.commit()
+    conn.close()
+
+def delete_order_item(order_item_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    DELETE FROM order_items
+    WHERE OrderItemID = %s
+    """, (order_item_id,))
+    conn.commit()
+    conn.close()
+

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'team_page.dart';
 import '/material/custom_appbar.dart';
 
 class ProfilePage extends StatelessWidget{
