@@ -44,7 +44,7 @@ class _CartPageState extends State<CartPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back , size: 40,color: Color(0xFF3C40C6),),
           onPressed: () {
             Navigator.pop(context); // or your custom logic
           },
@@ -65,35 +65,35 @@ class _CartPageState extends State<CartPage> {
               separatorBuilder: (_, __) => const Divider(),
               itemBuilder: (context, index) {
                 final item = _products[index];
-                return ListTile(
-                  title: Text(
-                    item['name'],
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                return Container(
+                  child: ListTile(
+                    title: Text(
+                      item['name'],
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item['spec']),
+                        Text('${item['price']}B/หน่วย'),
+                      ],
+                    ),
+                    trailing: Text('จำนวน ${item['quantity']}'),
                   ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(item['spec']),
-                      Text('${item['price']}B/หน่วย'),
-                    ],
-                  ),
-                  trailing: Text('จำนวน ${item['quantity']}'),
                 );
               },
             ),
 
             const SizedBox(height: 20),
             // ข้อมูลลูกค้า
-            Container(
+            const SizedBox(
               height: 42,
               width: 240,
-
               child: const Text(
                 'ชื่อลูกค้า : คุณทฤษฎี',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
-
             const SizedBox(height: 20),
             // ประเภทการจัดส่ง
             const Text(
@@ -128,8 +128,15 @@ class _CartPageState extends State<CartPage> {
               Padding(
                 padding: const EdgeInsets.only(left: 28.0),
                 child: GestureDetector(
-                  onTap: () {
-                    setState(() {});
+                  onTap: () async{
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MapPage()),
+                      );
+
+                      if (result != null && result is String) {
+                        setState(() => _deliveryAddress = result);
+                      }
                   },
                   child: Text('สถานที่: $_deliveryAddress'),
                 ),
@@ -192,8 +199,7 @@ class _CartPageState extends State<CartPage> {
             Row(
               
               children: [
-                SizedBox(
-                  width: double.infinity,
+                Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -202,8 +208,7 @@ class _CartPageState extends State<CartPage> {
                     child: const Text('ยกเลิกรายการทั้งหมด'),
                   ),
                 ),
-                SizedBox(
-                  width: double.infinity,
+                Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),

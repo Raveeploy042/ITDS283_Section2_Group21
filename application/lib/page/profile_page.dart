@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'team_page.dart';
+import '/material/custom_appbar.dart';
 
 class ProfilePage extends StatelessWidget{
   const ProfilePage ({super.key});
@@ -7,9 +8,7 @@ class ProfilePage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xFF3C40C6),
-        ),
+        appBar: CustomAppBar(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

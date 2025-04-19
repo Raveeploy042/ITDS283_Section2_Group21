@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '/page/home_page.dart';
-import '/material/bottom_navbar.dart';
 import 'package:intl/intl.dart';
 
-import 'profile_page.dart';
-import 'home_page.dart';
-import 'cart_page.dart';
+import '/page/home_page.dart';
+import '/page/cart_page.dart';
+import '/page/profile_page.dart';
+import '/material/bottom_navbar.dart';
 
 class ListHistory extends StatefulWidget {
   @override
@@ -13,21 +12,7 @@ class ListHistory extends StatefulWidget {
 }
 
 class _ListHistoryState extends State<ListHistory> {
-  // รายการของหน้าแต่ละหน้า
-  // final int _selectedIndex = 0 ;
-
-  // final List<Widget> _pages = [
-  //   HomePage(),
-  //   CartPage(),
-  //   ListHistory(),
-  //   ProfilePage(),
-  // ];
-
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index; // อัปเดตหน้าที่เลือก
-  //   });
-  // }
+  int _selectedIndex = 2;
 
   final List<Map<String, dynamic>> _orders = [
     {
@@ -88,6 +73,26 @@ class _ListHistoryState extends State<ListHistory> {
         : DateFormat('dd/MM/yyyy').format(date);
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomePage()));
+        break;
+      case 1:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => CartPage()));
+        break;
+      case 2:
+        // current page
+        break;
+      case 3:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ProfilePage()));
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,53 +100,58 @@ class _ListHistoryState extends State<ListHistory> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context); // or your custom logic
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         title: const Text('ประวัติคำสั่งซื้อ'),
         centerTitle: true,
       ),
       body: Column(
         children: [
-          Center(
-            child: Container(
-              height: 45,
-              width: 313,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withAlpha(255),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: Offset(0, 3), // เงาแนวตั้ง
-                  ),
-                ],
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: const EdgeInsets.all(15),
-                  hintText: 'Search Pancake',
-                  hintStyle: const TextStyle(
-                    color: Color(0xffDDDADA),
-                    fontSize: 14,
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.search),
+          // Search bar
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Center(
+              child: Container(
+                height: 45,
+                width: 313,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.4),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.all(15),
+                    hintText: 'Search history',
+                    hintStyle: const TextStyle(
+                      color: Color(0xffDDDADA),
+                      fontSize: 14,
+                    ),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        // Future: implement search filter
+                      },
+                      icon: Icon(Icons.search),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
+          // Order list
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.all(16),
@@ -149,42 +159,52 @@ class _ListHistoryState extends State<ListHistory> {
               separatorBuilder: (_, __) => const SizedBox(height: 20),
               itemBuilder: (context, index) {
                 final dateGroup = _orders[index];
-                return Row(
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image(image: AssetImage('assets/Team01.jpg')),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // วันที่
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Text(
-                            _formatDate(dateGroup['date']),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ),
-
-                        // รายการคำสั่งซื้อ
-                        ...dateGroup['orders'].map<Widget>(
-                          (order) => Card(
-                            color: Color(0xFF3C40C6),
-                            elevation: 2,
-                            margin: const EdgeInsets.only(bottom: 8),
-                            child: InkWell(
-                              onTap: () {}, // เพิ่มการทำงานเมื่อกดดูรายละเอียด
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                    Text(
+                      _formatDate(dateGroup['date']),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...dateGroup['orders'].map<Widget>((order) {
+                      return Card(
+                        color: Color(0xFF3C40C6),
+                        elevation: 2,
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: InkWell(
+                          onTap: () {
+                            // TODO: push to order detail page
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 124,
+                                  width: 124,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image.asset('assets/Team01.jpg', fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
                                         children: [
                                           Text(
                                             'Order No. ${order['orderNo']}',
@@ -193,49 +213,58 @@ class _ListHistoryState extends State<ListHistory> {
                                               color: Colors.white,
                                             ),
                                           ),
-                                          Text(
-                                            '฿${order['total'].toStringAsFixed(2)}',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              color: Colors.green,
-                                            ),
-                                          ),
                                         ],
                                       ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text('ชื่อลูกค้า : ${order['customer']}'),
-                                    Text(
-                                      'ผู้จัดส่ง : ${order['deliveryUser']}',
-                                    ),
-                                    Text(
-                                      'จำนวนสินค้า ${order['itemCount']} รายการ',
-                                    ),
-                                    const SizedBox(height: 8),
-                                    ...order['products']
-                                        .take(2)
-                                        .map<Widget>(
-                                          (p) => Text(
-                                            '• $p',
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'ชื่อลูกค้า : ${order['customer']}',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        'ผู้จัดส่ง : ${order['deliveryUser']}',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        'จำนวนสินค้า ${order['itemCount']} รายการ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      ...order['products']
+                                          .take(2)
+                                          .map<Widget>((p) => Text('• $p', style: TextStyle(color: Colors.white))),
+                                      if (order['products'].length > 2)
+                                        const Text('• ...', style: TextStyle(color: Colors.white)),
+                                      Row(
+                                        spacing: 10,
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            'ยอดรวม',
                                             style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
                                               color: Colors.white,
                                             ),
                                           ),
-                                        ),
-                                    if (order['products'].length > 2)
-                                      const Text(
-                                        '• ...',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                  ],
+                                          Text(
+                                            '${order['total'].toStringAsFixed(2)}฿',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    }).toList(),
                   ],
                 );
               },
@@ -253,11 +282,10 @@ class _ListHistoryState extends State<ListHistory> {
           ),
         ],
       ),
-      // bottomNavigationBar: MyBottomNavBar(
-      //   currentIndex: ,
-      //   onTap: ,
-
-      // ),
+      bottomNavigationBar: MyBottomNavBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }

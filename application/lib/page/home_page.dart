@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
         final List<dynamic> data = json.decode(response.body);
         setState(() {
           _products = data;
-          _statusMessage = "Loaded ${data.length} customers.";
+          _statusMessage = "Loaded ${data.length} product.";
         });
       } else {
         setState(() {
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _fetchProduct();
   }
-
+  @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
@@ -199,9 +199,7 @@ class _HomePageState extends State<HomePage> {
                               spacing: 3,
                               children: [
                                 Text(
-                                  '${product['Price']}\฿\/${product['Unit']}'
-                                              .length > 15 ? '${product['Price']}฿/${product['Unit']}'.substring(0, 15) +'...'
-                                      : '${product['Price']}฿/${product['Unit']}', // ถ้าราคามีรูปแบบเป็นตัวเลขหรือเงิน
+                                  '${product['Price']}\฿\/${product['Unit']}',
                                   style: TextStyle(
                                     color: Color(0xFF3700FF),
                                     fontFamily: 'Inter',
@@ -297,6 +295,27 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: MyBottomNavBar(
+        currentIndex: 0, // index ของ 'Home' จาก BottomNavigationBarItem
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              break;
+            case 1:
+              Navigator.pushReplacementNamed(context, '/search');
+              break;
+            case 2:
+              Navigator.pushReplacementNamed(context, '/cart');
+              break;
+            case 3:
+              Navigator.pushReplacementNamed(context, '/home');
+              break;
+            case 4:
+              Navigator.pushReplacementNamed(context, '/profile');
+              break;
+          }
+        },
       ),
     );
   }

@@ -25,6 +25,10 @@ CORS(app)
 def get_products():
     return jsonify(project_crud.get_all_products())
 
+@app.route('/staffs/<string:username>', methods=['GET'])
+def get_staffs(username):
+    return jsonify(project_crud.get_staff(username))
+
 # Update customer
 # @app.route('/customers/<int:customer_id>', methods=['PUT'])
 # def update_customer(customer_id):

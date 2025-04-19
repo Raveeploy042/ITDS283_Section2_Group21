@@ -16,7 +16,9 @@ class _MapPageState extends State<MapPage> {
   LatLng? _currentLatLng;
   String _address = 'กำลังโหลดตำแหน่ง...';
   final TextEditingController _searchController = TextEditingController();
-  final GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: 'AIzaSyAo8zz60Yxv32lzFXlAZo99aaaGk-zFQcI'); // API Key
+  final GoogleMapsPlaces _places = GoogleMapsPlaces(
+    apiKey: 'AIzaSyAo8zz60Yxv32lzFXlAZo99aaaGk-zFQcI',
+  ); // API Key
 
   @override
   void initState() {
@@ -75,33 +77,6 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  Future<void> _searchPlace(String place) async {
-  if (place.isEmpty) return;
-
-  final response = await _places.searchByText(place);
-  if (response.status == 'OK' && response.results.isNotEmpty) {
-    final result = response.results.first;
-    final latLng = LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
-
-    setState(() {
-      _currentLatLng = latLng;
-    });
-
-    _mapController?.animateCamera(CameraUpdate.newLatLngZoom(latLng, 16));
-
-    // แปลงเป็นที่อยู่
-    List<Placemark> placemarks = await placemarkFromCoordinates(latLng.latitude, latLng.longitude);
-    Placemark placeMark = placemarks[0];
-    setState(() {
-      _address = '${placeMark.name}, ${placeMark.subLocality}, ${placeMark.locality}, ${placeMark.administrativeArea} ${placeMark.postalCode}';
-    });
-  } else {
-    setState(() {
-      _address = 'ไม่พบสถานที่';
-    });
-  }
-}
-
   void _onMapTap(LatLng latLng) async {
     setState(() {
       _currentLatLng = latLng;
@@ -117,6 +92,73 @@ class _MapPageState extends State<MapPage> {
       _address =
           '${place.name}, ${place.subLocality}, ${place.locality}, ${place.administrativeArea} ${place.postalCode}';
     });
+  }
+
+  Future<void> _searchPlace(String place) async {
+    if (place.isEmpty) return;
+
+    try {
+      final response = await _places.searchByText(place);
+
+      if (response.status == 'OK' && response.results.isNotEmpty) {
+        final result = response.results.first;
+
+        // เช็กว่ามี geometry ไหม
+        if (result.geometry?.location == null) {
+          setState(() {
+            _address = 'ไม่สามารถระบุพิกัดของสถานที่นี้ได้';
+          });
+          return;
+        }
+
+        final latLng = LatLng(
+          result.geometry!.location.lat,
+          result.geometry!.location.lng,
+        );
+
+        // ตรวจสอบว่าอยู่ห่างจากตำแหน่งปัจจุบันเกินไปหรือไม่
+        if (_currentLatLng != null) {
+          final distance = Geolocator.distanceBetween(
+            _currentLatLng!.latitude,
+            _currentLatLng!.longitude,
+            latLng.latitude,
+            latLng.longitude,
+          );
+
+          if (distance > 50000) {
+            // เกิน 50 กม.
+            setState(() {
+              _address = 'สถานที่อยู่ห่างจากตำแหน่งปัจจุบันเกินไป';
+            });
+            return;
+          }
+        }
+
+        setState(() {
+          _currentLatLng = latLng;
+        });
+
+        _mapController?.animateCamera(CameraUpdate.newLatLngZoom(latLng, 16));
+
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+          latLng.latitude,
+          latLng.longitude,
+        );
+        Placemark placeMark = placemarks[0];
+        setState(() {
+          _address =
+              '${placeMark.name}, ${placeMark.subLocality}, ${placeMark.locality}, ${placeMark.administrativeArea} ${placeMark.postalCode}';
+        });
+      } else {
+        setState(() {
+          _address = 'ไม่พบสถานที่ที่ค้นหา';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _address = 'เกิดข้อผิดพลาดในการค้นหาสถานที่';
+      });
+    }
   }
 
   @override

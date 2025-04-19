@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final TextEditingController? searchController;
-  final VoidCallback? onCartPressed;
-
-  CustomAppBar({this.searchController, this.onCartPressed});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: Color(0xFF3C40C6),
       title: GestureDetector(
         onTap: null,

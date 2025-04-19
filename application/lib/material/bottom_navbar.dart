@@ -12,9 +12,12 @@ class MyBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
+    return BottomNavigationBar(      
+      backgroundColor: const Color(0xFF3C40C6),
       currentIndex: currentIndex,
       onTap: onTap,
+      selectedItemColor: Colors.black,        // สีของ tab ที่เลือกอยู่
+      unselectedItemColor: Colors.grey,    // สีของ tab ที่ไม่ได้เลือก
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home',),
         BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
@@ -22,6 +25,7 @@ class MyBottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'History'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
       ],
+      
     );
   }
 }
