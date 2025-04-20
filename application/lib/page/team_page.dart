@@ -102,6 +102,27 @@ class TeamPage extends StatelessWidget {
             ],
           ),
         ),
+        bottomNavigationBar: MyBottomNavBar(
+        currentIndex: 4, // index ของ 'Home' จาก BottomNavigationBarItem
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.pushReplacementNamed(context, '/home');
+              break;
+            case 1:
+              Navigator.pushReplacementNamed(context, '/search');
+              break;
+            case 2:
+              Navigator.pushReplacementNamed(context, '/cart');
+              break;
+            case 3:
+              Navigator.pushReplacementNamed(context, '/history');
+              break;
+            case 4:
+              break;
+          }
+        },
+      ),
       )
     );
   }

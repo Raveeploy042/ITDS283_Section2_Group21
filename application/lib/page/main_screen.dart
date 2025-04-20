@@ -22,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
     HomePage(),
     CartPage(),
     ListHistory(),
-    ProfilePage(),
+    // ProfilePage(),
   ];
 
   void _onItemTapped(int index) {

@@ -88,7 +88,7 @@ class _ListHistoryState extends State<ListHistory> {
         // current page
         break;
       case 3:
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ProfilePage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ProfilePage(id: 1,)));
         break;
     }
   }
@@ -283,8 +283,25 @@ class _ListHistoryState extends State<ListHistory> {
         ],
       ),
       bottomNavigationBar: MyBottomNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        currentIndex: 3, // index ของ 'Home' จาก BottomNavigationBarItem
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.pushReplacementNamed(context, '/home');
+              break;
+            case 1:
+              Navigator.pushReplacementNamed(context, '/search');
+              break;
+            case 2:
+              Navigator.pushReplacementNamed(context, '/cart');
+              break;
+            case 3:
+              break;
+            case 4:
+              Navigator.pushReplacementNamed(context, '/profile');
+              break;
+          }
+        },
       ),
     );
   }
