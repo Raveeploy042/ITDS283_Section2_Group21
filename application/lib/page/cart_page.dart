@@ -29,7 +29,7 @@ class _CartPageState extends State<CartPage> {
       'quantity': 1,
     },
     {
-      'name': 'อิฐมวลเนา สราเพชร',
+      'name': 'อิฐมวลเบา ตราเพชร',
       'spec': 'รุ่น 7 ชม.',
       'price': 35,
       'quantity': 10,
@@ -48,12 +48,15 @@ class _CartPageState extends State<CartPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back , size: 40,color: Color(0xFF3C40C6),),
+          icon: Icon(Icons.arrow_back, size: 40, color: Color(0xFF3C40C6)),
           onPressed: () {
             Navigator.pop(context); // or your custom logic
           },
         ),
-        title: const Text('รายการสินค้าในรถเข็น', style: TextStyle(fontWeight: FontWeight.bold),),
+        title: const Text(
+          'รายการสินค้าในรถเข็น',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -71,40 +74,75 @@ class _CartPageState extends State<CartPage> {
                 final item = _products[index];
                 return Container(
                   width: 372,
-                  height: 160,
+                  height: 132,
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Color(0xFF3C40C6),
-                    borderRadius: BorderRadius.circular(10)
+                    color: const Color(0xFF3C40C6),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: ListTile(
-                    leading: Container(
-                      width: 132,
-                      height: 132,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // รูปสินค้า
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
                         child: Image.asset(
                           'assets/Team02.jpg',
-                          width: 132,
-                          height: 132,
-                          fit: BoxFit.contain,),
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    title: Text(
-                      item['name'],
-                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(item['spec'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
-                        Text('${item['price']}B/หน่วย', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
-                      ],
-                    ),
-                    trailing: Text('จำนวน ${item['quantity']}', style: TextStyle(color: Colors.white, fontSize: 20),),
+                      const SizedBox(width: 10),
+                      // รายละเอียดสินค้า
+                      Expanded(
+                        flex: 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              item['name'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              item['spec'],
+                              style: const TextStyle(color: Colors.white),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '${item['price']} B/หน่วย',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // จำนวน
+                      Expanded(
+                        flex: 2,
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            'จำนวน ${item['quantity']}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -117,20 +155,17 @@ class _CartPageState extends State<CartPage> {
               width: 240,
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                color: Color(0xFFEEEEEE),
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 2
-                  ),
-                borderRadius: BorderRadius.circular(8)
+                  color: Color(0xFFEEEEEE),
+                  border: Border.all(color: Colors.grey, width: 2),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Text(
-                'ชื่อลูกค้า : คุณทฤษฎี',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  child: Text(
+                    'ชื่อลูกค้า : คุณทฤษฎี',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -167,76 +202,133 @@ class _CartPageState extends State<CartPage> {
               Padding(
                 padding: const EdgeInsets.only(left: 28.0),
                 child: GestureDetector(
-                  onTap: () async{
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MapPage()),
-                      );
+                  onTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MapPage()),
+                    );
 
-                      if (result != null && result is String) {
-                        setState(() => _deliveryAddress = result);
-                      }
+                    if (result != null && result is String) {
+                      setState(() => _deliveryAddress = result);
+                    }
                   },
                   child: Text('สถานที่: $_deliveryAddress'),
                 ),
               ),
 
             const SizedBox(height: 20),
+
             // สรุปคำสั่งซื้อ
-            const Text(
-              'สินค้ารวม ${3} รายการ',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Table(
-              columnWidths: const {
-                0: FlexColumnWidth(1),
-                1: FlexColumnWidth(3),
-                2: FlexColumnWidth(2),
-              },
-              children: [
-                const TableRow(
-                  children: [
-                    Text(
-                      'จำนวน',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+            Container(
+              color: const Color(0xFF3C40C6),
+              width: double.infinity,
+              margin: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'สินค้ารวม ${_products.length} รายการ',
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    Text(
-                      'สินค้า',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text('ราคา', style: TextStyle(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                ..._products.map(
-                  (item) => TableRow(
-                    children: [
-                      Text('${item['quantity']}'),
-                      Text(item['name']),
-                      Text(
-                        '${(item['price'] * item['quantity']).toStringAsFixed(2)}B',
-                      ),
-                    ],
                   ),
-                ),
-                TableRow(
-                  children: [
-                    const Text(
-                      'รวม',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                  const SizedBox(height: 10),
+                  Container(
+                    color: Colors.grey[300],
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 8,
                     ),
-                    const Text(''),
-                    Text(
-                      '${_totalPrice.toStringAsFixed(2)}B',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    child: const Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            'จำนวน',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: Text(
+                            'สินค้า',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            'ราคา',
+                            textAlign: TextAlign.end,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  ..._products.map(
+                    (item) => Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 8,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              '${item['quantity']}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 4,
+                            child: Text(
+                              item['name'],
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              '${item['price'] * item['quantity']} B',
+                              textAlign: TextAlign.end,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'รวมทั้งหมด: $_totalPrice บาท',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             const SizedBox(height: 30),
             Row(
-              
               children: [
                 Expanded(
                   child: ElevatedButton(
