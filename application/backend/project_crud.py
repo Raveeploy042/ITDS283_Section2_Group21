@@ -16,7 +16,7 @@ def get_staff(name):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""
-        SELECT StaffName, username, password, position
+        SELECT StaffID,StaffName, username, password, position
         FROM staffs
         WHERE username=%s
     """, (name,))
@@ -51,14 +51,14 @@ def get_product(productId):
     return result
 
 
-def create_orders(staffId):
+def create_orders():
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT INTO orders (OrderDate, Status, StaffID)
-    VALUES (CURDATE(), 'still in cart', %s);
-    """, (staffId,))
+    INSERT INTO orders (OrderDate, Status)
+    VALUES (CURDATE(), 'still in cart');
+    """, )
     conn.commit()
     conn.close()
 
@@ -71,6 +71,17 @@ def get_order(orderId):
         WHERE OrderID=%s
     """, (orderId,))
     result = cursor.fetchone()
+    conn.close()
+    return result
+
+def get_all_order():
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT OrderID, CustomerName, OrderDate, transport , Address, StaffID, CreatedAt, UpdatedAt,Status
+        FROM orders
+    """,)
+    result = cursor.fetchall()
     conn.close()
     return result
 

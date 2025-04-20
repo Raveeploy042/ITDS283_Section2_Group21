@@ -13,7 +13,7 @@ class MyBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(      
-      backgroundColor: const Color(0xFF3C40C6),
+      backgroundColor: Color(0xFF3C40C6),
       currentIndex: currentIndex,
       onTap: onTap,
       selectedItemColor: Colors.black,        // สีของ tab ที่เลือกอยู่

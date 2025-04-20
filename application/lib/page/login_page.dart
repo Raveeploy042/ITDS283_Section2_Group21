@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -32,19 +33,17 @@ class _LoginPageState extends State<LoginPage> {
   //           'password': password, // คีย์ที่ตรงกับ API
   //         }),
   //       );
-
+  //       print("Response body: ${response.body}");
   //       // ถ้าคำขอสำเร็จ
   //       if (response.statusCode == 200) {
   //         final data = json.decode(response.body);
 
   //         if (data['message'] == 'Login successful') {
   //           // ถ้าการเข้าสู่ระบบสำเร็จ
-  //           // String token = data['token']; // ดึง JWT token ที่ได้รับจาก API
+  //           String token = data['token']; // ดึง JWT token ที่ได้รับจาก API
 
   //           // บันทึก token หรือใช้งาน token ตามที่ต้องการ
-  //           // _saveToken(
-  //           //   token,
-  //           // ); // ฟังก์ชันที่ใช้เก็บ token (สามารถใช้ SharedPreferences หรือ Provider)
+  //           _saveToken(token); // เรียกฟังก์ชันบันทึก token
   //           print('Success');
   //           _showDialog('เข้าสู่ระบบสำเร็จ!');
   //         } else {
@@ -62,46 +61,68 @@ class _LoginPageState extends State<LoginPage> {
   //   }
   // }
 
-Future<void> _login() async {
-  String username = _usernameController.text;
-  String password = _passwordController.text;
+  // // ฟังก์ชันสำหรับบันทึก JWT Token
+  // Future<void> _saveToken(String token) async {
+  //   print(
+  //       'try to saved token',
+  //   );
+  //   try {
+  //     final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     print(
+  //       'try to saved token',
+  //     ); // เพิ่มข้อความเพื่อยืนยันว่าได้บันทึกแล้ว
+  //     await prefs.setString(
+  //       'jwt_token',
+  //       token,
+  //     ); // บันทึก JWT token ลงใน SharedPreferences
+  //     print(
+  //       'Token saved successfully',
+  //     ); // เพิ่มข้อความเพื่อยืนยันว่าได้บันทึกแล้ว
+  //   } catch (e) {
+  //     print('Error saving token: $e'); // หากเกิดข้อผิดพลาด
+  //   }
+  // }
+  Future<void> _login() async {
+    String username = _usernameController.text;
+    String password = _passwordController.text;
 
-  // ตรวจสอบว่า username หรือ password ว่างหรือไม่
-  if (username.isEmpty || password.isEmpty) {
-    _showDialog('กรุณากรอกข้อมูลให้ครบถ้วน');
-  } else {
-    // ตัวอย่างการตรวจสอบการเข้าสู่ระบบโดยใช้ข้อมูลที่ตั้งไว้ภายในแอป
-    if (username == 'testuser' && password == 'password123') {
-      // ถ้าการเข้าสู่ระบบสำเร็จ
-      _showDialog('เข้าสู่ระบบสำเร็จ!', isSuccess: true);
+    // ตรวจสอบว่า username หรือ password ว่างหรือไม่
+    if (username.isEmpty || password.isEmpty) {
+      _showDialog('กรุณากรอกข้อมูลให้ครบถ้วน');
     } else {
-      _showDialog('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+      // ตัวอย่างการตรวจสอบการเข้าสู่ระบบโดยใช้ข้อมูลที่ตั้งไว้ภายในแอป
+      if (username == 'testuser' && password == 'password123') {
+        // ถ้าการเข้าสู่ระบบสำเร็จ
+        _showDialog('เข้าสู่ระบบสำเร็จ!', isSuccess: true);
+      } else {
+        _showDialog('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+      }
     }
   }
-}
 
-// ฟังก์ชันสำหรับแสดง AlertDialog
-void _showDialog(String message, {bool isSuccess = false}) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('ผลการตรวจสอบ'),
-      content: Text(message),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop(); // ปิด Dialog
-            if (isSuccess) {
-              // ถ้าเข้าสู่ระบบสำเร็จ ไปยังหน้าถัดไป
-              Navigator.pushReplacementNamed(context, '/home');
-            }
-          },
-          child: Text('ตกลง'),
-        ),
-      ],
-    ),
-  );
-}
+  // ฟังก์ชันสำหรับแสดง AlertDialog
+  void _showDialog(String message, {bool isSuccess = false}) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('ผลการตรวจสอบ'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // ปิด Dialog
+                  if (isSuccess) {
+                    // ถ้าเข้าสู่ระบบสำเร็จ ไปยังหน้าถัดไป
+                    Navigator.pushNamed(context, '/home');
+                  }
+                },
+                child: Text('ตกลง'),
+              ),
+            ],
+          ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

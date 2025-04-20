@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         '/map': (context) => MapPage(),
         '/invoice': (context) => InvoicePage(),
         '/history': (context) => ListHistory(),
-        '/profile': (context) => ProfilePage(id: 1,),
+        '/profile': (context) => ProfilePage(),
         '/team': (context) => TeamPage(),
         '/welcome': (context) => Welcome(),
       },

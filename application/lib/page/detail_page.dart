@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class DetailPage extends StatefulWidget {
-  final int id ;
+  final int id;
   const DetailPage({super.key, required this.id});
 
   @override
@@ -29,7 +29,7 @@ class _DetailPageState extends State<DetailPage> {
       });
     }
   }
-  
+
   List<dynamic> _products = [];
   String _statusMessage = "";
 
@@ -41,10 +41,10 @@ class _DetailPageState extends State<DetailPage> {
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
-          _products = data;
-          _statusMessage = "Loaded ${data.length} products.";
+          _products = [data];
+          _statusMessage = "Loaded 1 product."; // เนื่องจากเป็น 1 รายการ
         });
       } else {
         setState(() {
@@ -61,7 +61,7 @@ class _DetailPageState extends State<DetailPage> {
   @override
   void initState() {
     super.initState();
-    _fetchProducts(widget.id);  // เรียกใช้ _fetchProducts เมื่อเริ่มต้น
+    _fetchProducts(widget.id); // เรียกใช้ _fetchProducts เมื่อเริ่มต้น
   }
 
   @override
@@ -71,7 +71,12 @@ class _DetailPageState extends State<DetailPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: Icon(Icons.arrow_back, color: Color(0xFF3C40C6), size: 32),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, size: 40, color: Color(0xFF3C40C6)),
+            onPressed: () {
+              Navigator.pop(context); // or your custom logic
+            },
+          ),
           title: const Text(
             'รายละเอียดสินค้า',
             style: TextStyle(
@@ -86,126 +91,136 @@ class _DetailPageState extends State<DetailPage> {
             children: [
               // ถ้า _products ว่างให้แสดง CircularProgressIndicator
               _products.isEmpty
-                  ? Center(child: CircularProgressIndicator())  // แสดง loader
+                  ? Center(child: CircularProgressIndicator()) // แสดง loader
                   : Column(
-                      children: [
-                        SizedBox(height: 30),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(30, 20, 30, 20),
-                          width: 240,
-                          height: 240,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                offset: Offset(4, 6),
-                                blurRadius: 12,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: _products[0]['ImageURL'] != null
-                                  ? Image.network(_products[0]['ImageURL']) // แสดงภาพจาก URL
-                                  : const Icon(Icons.image, size: 100, color: Colors.grey),
+                    children: [
+                      SizedBox(height: 30),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(30, 20, 30, 20),
+                        width: 240,
+                        height: 240,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              offset: Offset(4, 6),
+                              blurRadius: 12,
+                              spreadRadius: 2,
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 20),
-                        Container(
-                          width: 363,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFE9E9E9),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                offset: Offset(4, 6),
-                                blurRadius: 12,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8, right: 12),
-                                child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: Text(
-                                    'รหัสสินค้า : ${_products[0]['productID']}',
-                                    style: TextStyle(fontSize: 12, color: Colors.black54),
-                                  ),
+                        child:
+                            _products[0]['ImageURL'] != null
+                                ? Image.network(
+                                  _products[0]['ImageURL'],
+                                ) // แสดงภาพจาก URL
+                                : const Icon(
+                                  Icons.image,
+                                  size: 100,
+                                  color: Colors.grey,
                                 ),
-                              ),
-                              Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(8),
-                                color: Color(0xFF3C40C6),
+                      ),
+                      SizedBox(height: 20),
+                      Container(
+                        width: 363,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFE9E9E9),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              offset: Offset(4, 6),
+                              blurRadius: 12,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8, right: 12),
+                              child: Align(
+                                alignment: Alignment.topRight,
                                 child: Text(
-                                  'ชื่อ :  ${_products[0]['ProductName']}',
+                                  'รหัสสินค้า : ${_products[0]['productID']}',
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    height: 1.4,
+                                    fontSize: 12,
+                                    color: Colors.black54,
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'ประเภท : ${_products[0]['Type']}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    SizedBox(height: 6),
-                                    Text(
-                                      'ยี่ห้อ : ${_products[0]['Brand']}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.location_on, size: 20),
-                                        SizedBox(width: 6),
-                                        Text(
-                                          'Location : ${_products[0]['Location']}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 20),
-                                    Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: Text(
-                                        'ราคา ${_products[0]['Price']}฿ / ${_products[0]['Unit']}',
-                                        style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 30,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                            ),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(8),
+                              color: Color(0xFF3C40C6),
+                              child: Text(
+                                'ชื่อ :  ${_products[0]['ProductName']}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  height: 1.4,
                                 ),
-                              )
-                            ],
-                          ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'ประเภท : ${_products[0]['Type']}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  SizedBox(height: 6),
+                                  Text(
+                                    'ยี่ห้อ : ${_products[0]['Brand']}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.location_on, size: 20),
+                                      SizedBox(width: 6),
+                                      Text(
+                                        'Location : ${_products[0]['Location']}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Text(
+                                      'ราคา ${_products[0]['Price']}฿ / ${_products[0]['Unit']}',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
               SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -213,7 +228,10 @@ class _DetailPageState extends State<DetailPage> {
                   children: [
                     Text(
                       'จำนวน',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(width: 10),
                     // ปุ่มลบ
@@ -227,7 +245,10 @@ class _DetailPageState extends State<DetailPage> {
                     SizedBox(width: 10),
                     Text(
                       '$quantity',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(width: 10),
                     GestureDetector(
@@ -239,11 +260,13 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                     Spacer(),
                     ElevatedButton(
-                      onPressed: () {
-                      },
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.greenAccent[400],
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
