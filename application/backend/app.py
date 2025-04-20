@@ -114,13 +114,8 @@ def create_staff_api():
 # Create a new order
 @app.route('/orders', methods=['POST'])
 def create_order():
-    data = request.json
-    staff_id = data.get("StaffID")
-    if not staff_id:
-        return jsonify({"error": "StaffID is required"}), 400
-    
     try:
-        project_crud.create_orders(staff_id)
+        project_crud.create_orders()
         return jsonify({"message": "Order created successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -136,6 +131,18 @@ def get_order(order_id):
             return jsonify({"message": "Order not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/orders', methods=['GET'])
+def get_all_order():
+    try:
+        order = project_crud.get_all_order()
+        if order:
+            return jsonify(order), 200
+        else:
+            return jsonify({"message": "Order not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route('/orders/<int:order_id>', methods=['PUT'])
 def update_order(order_id):

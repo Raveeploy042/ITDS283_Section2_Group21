@@ -6,8 +6,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget{
-  final int id;
-  const ProfilePage ({super.key, required this.id});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -18,35 +16,35 @@ class _ProfilePageState extends State<ProfilePage> {
   List<dynamic> _staff = [];
   String _statusMessage = "";
 
-  Future<void> _fetchStaff(staffId) async {
-    final id = staffId;
-    final url = Uri.parse("${AppConfig.baseUrl}/products/$id");
+  // Future<void> _fetchStaff(staffId) async {
+  //   final id = staffId;
+  //   final url = Uri.parse("${AppConfig.baseUrl}/products/$id");
 
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        setState(() {
-          _staff = data;
-          _statusMessage = "Loaded ${data.length} staff.";
-        });
-      } else {
-        setState(() {
-          _statusMessage = "Error: ${response.statusCode}";
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _statusMessage = "Exception: $e";
-      });
-    }
-  }
+  //   try {
+  //     final response = await http.get(url);
+  //     if (response.statusCode == 200) {
+  //       final List<dynamic> data = json.decode(response.body);
+  //       setState(() {
+  //         _staff = data;
+  //         _statusMessage = "Loaded ${data.length} staff.";
+  //       });
+  //     } else {
+  //       setState(() {
+  //         _statusMessage = "Error: ${response.statusCode}";
+  //       });
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       _statusMessage = "Exception: $e";
+  //     });
+  //   }
+  // }
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchStaff(widget.id);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // _fetchStaff(widget.id);
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,7 +159,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   SizedBox(height: 10),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/team');
+                    },
                     style: TextButton.styleFrom(
                       minimumSize: Size(228,35),
                       foregroundColor: Colors.black,
@@ -169,12 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       side: BorderSide(
                         color: Color(0xFFD9D9D9)),
                     ),
-                    child: 
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/team');
-                      },
-                      child: Text(
+                    child: Text(
                         'ติดต่อผู้พัฒนา',
                         style: 
                         TextStyle(
@@ -183,8 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           fontWeight: FontWeight.bold
                         ),
                       ),
-                    )
-                  ),
+                    ),
                   SizedBox(height: 40),
                   TextButton(
                     onPressed: () {

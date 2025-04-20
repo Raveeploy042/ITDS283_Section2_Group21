@@ -5,6 +5,8 @@ import '/config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '/page/detail_page.dart';
+import 'package:jwt_decode/jwt_decode.dart';  // ใช้สำหรับ decode JWT token
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<dynamic> _products = [];
+  int? staffId ;
   String _statusMessage = "";
 
   Future<void> _fetchProduct() async {
@@ -37,11 +40,25 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
+    // ฟังก์ชันสำหรับดึง JWT token และ decode ข้อมูล
+  Future<void> _loadStaffId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('jwt_token');
+    
+    if (token != null) {
+      // Decode JWT token
+      Map<String, dynamic> payload = Jwt.parseJwt(token);
+      setState(() {
+        staffId = payload['staff_id'];  // ดึง staff_id จาก JWT token
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _fetchProduct();
+    _loadStaffId();
   }
 
   @override
@@ -211,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                               spacing: 3,
                               children: [
                                 Text(
-                                  '${product['Price']}\฿\/${product['Unit']}',
+                                  '${(product['Price'] + '/' + product['Unit']).substring(0, 10)}...', 
                                   style: TextStyle(
                                     color: Color(0xFF3700FF),
                                     fontFamily: 'Inter',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '/material/bottom_navbar.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({super.key});
@@ -55,7 +56,27 @@ class _SearchPageState extends State<SearchPage> {
           },
         ),
       ),
-      
+      bottomNavigationBar: MyBottomNavBar(
+        currentIndex: 1, // index ของ 'Home' จาก BottomNavigationBarItem
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.pushNamed(context, '/home');
+              break;
+            case 1:
+              break;
+            case 2:
+              Navigator.pushNamed(context, '/cart');
+              break;
+            case 3:
+              Navigator.pushNamed(context, '/history');
+              break;
+            case 4:
+              Navigator.pushNamed(context, '/profile');
+              break;
+          }
+        },
+      ),
     );
   }
 }
