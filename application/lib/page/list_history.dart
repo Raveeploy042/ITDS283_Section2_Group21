@@ -257,7 +257,7 @@ class _ListHistoryState extends State<ListHistory> {
                                           Text(
                                             'Order No. ${order['OrderID']}',
                                             style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
                                               color: Colors.white,
                                             ),
                                           ),
@@ -276,7 +276,7 @@ class _ListHistoryState extends State<ListHistory> {
                                         'จำนวนสินค้า ${order.length} รายการ',
                                         style: TextStyle(color: Colors.white),
                                       ),
-                                      const SizedBox(height: 8),
+                                      const SizedBox(height: 2),
                                       ...order['products']
                                           .take(2)
                                           .map<Widget>(
@@ -299,7 +299,7 @@ class _ListHistoryState extends State<ListHistory> {
                                             'ยอดรวม',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 16,
+                                              fontSize: 20,
                                               color: Colors.white,
                                             ),
                                           ),
@@ -308,7 +308,7 @@ class _ListHistoryState extends State<ListHistory> {
                                             '${order['total'].toStringAsFixed(2)}฿',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 16,
+                                              fontSize: 24,
                                               color: Colors.white,
                                             ),
                                           ),
