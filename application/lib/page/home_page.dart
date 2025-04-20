@@ -4,10 +4,7 @@ import '/material/bottom_navbar.dart';
 import '/config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-void main(List<String> args) {
-  runApp(HomePage());
-}
+import '/page/detail_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -28,6 +25,7 @@ class _HomePageState extends State<HomePage> {
           _products = data;
           _statusMessage = "Loaded ${data.length} product.";
         });
+        print('fetch product success');
       } else {
         setState(() {
           _statusMessage = "Error: ${response.statusCode}";
@@ -45,6 +43,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _fetchProduct();
   }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -169,18 +168,31 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             // แสดงรูปภาพ
-                            Container(
-                              height: 100,
-                              color: Colors.white,
-                              child:
-                                  product['ImageURL'] != null
-                                      ? Image.network(
-                                        product['ImageURL'],
-                                      ) // แสดงภาพจาก URL
-                                      : const Icon(
-                                        Icons.image,
-                                        size: 92,
-                                      ), // ถ้าไม่มีรูป ให้แสดง icon แทน
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => DetailPage(
+                                          id: product['productID'],
+                                        ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                height: 100,
+                                color: Colors.white,
+                                child:
+                                    product['ImageURL'] != null
+                                        ? Image.network(
+                                          product['ImageURL'],
+                                        ) // แสดงภาพจาก URL
+                                        : const Icon(
+                                          Icons.image,
+                                          size: 92,
+                                        ), // ถ้าไม่มีรูป ให้แสดง icon แทน
+                              ),
                             ),
                             const SizedBox(height: 2),
                             // แสดงชื่อสินค้า
@@ -303,16 +315,16 @@ class _HomePageState extends State<HomePage> {
             case 0:
               break;
             case 1:
-              Navigator.pushReplacementNamed(context, '/search');
+              Navigator.pushNamed(context, '/search');
               break;
             case 2:
-              Navigator.pushReplacementNamed(context, '/cart');
+              Navigator.pushNamed(context, '/cart');
               break;
             case 3:
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pushNamed(context, '/history');
               break;
             case 4:
-              Navigator.pushReplacementNamed(context, '/profile');
+              Navigator.pushNamed(context, '/profile');
               break;
           }
         },

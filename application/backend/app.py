@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import socket
 import project_crud
+import datetime
+import jwt
 
 app = Flask(__name__)
 CORS(app)
@@ -47,6 +49,41 @@ def get_staffs(username):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+
+SECRET_KEY = 'your_secret_key'  # ควรเก็บใน environment variable สำหรับความปลอดภัย
+
+# ฟังก์ชันในการสร้าง JWT token ที่มีข้อมูลของ staffId
+def create_jwt_token(staff_id, username):
+    payload = {
+        'staff_id': staff_id,
+        'username': username,
+        'exp': datetime.datetime.now() + datetime.timedelta(hours=1)  # หมดอายุใน 1 ชั่วโมง
+    }
+    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+    return token
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username or not password:
+        return jsonify({"error": "Both username and password are required"}), 400
+
+    try:
+        # ตรวจสอบข้อมูลในฐานข้อมูล
+        user = project_crud.get_staff(username)  # ดึงข้อมูลพนักงานจากฐานข้อมูล
+        if user and user['password'] == password:  # ตรวจสอบรหัสผ่าน
+            # สร้าง JWT Token ที่มีข้อมูล staff_id และ username
+            token = create_jwt_token(user['StaffID'], user['username'])
+            return jsonify({"message": "Login successful", "token": token}), 200
+        else:
+            return jsonify({"error": "Invalid username or password"}), 401
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/staffs', methods=['POST'])
 def create_staff_api():
     # รับข้อมูลจาก request body (ในรูปแบบ JSON)
@@ -218,6 +255,7 @@ def search_products():
             return jsonify({"message": "No products found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 # -------------------------------
 # Main
 # -------------------------------

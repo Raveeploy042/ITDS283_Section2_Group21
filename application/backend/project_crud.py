@@ -30,7 +30,7 @@ def get_all_products():
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""
-    SELECT ProductName, Type, Brand, Price, Unit,  Location, ImageURL
+    SELECT  productID ,ProductName, Type, Brand, Price, Unit,  Location, ImageURL
     FROM products
     """)
     result = cursor.fetchall()
