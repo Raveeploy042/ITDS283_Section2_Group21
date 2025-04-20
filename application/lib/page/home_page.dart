@@ -5,6 +5,7 @@ import '/config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '/page/detail_page.dart';
+import '/page/result_search_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -222,7 +223,6 @@ class _HomePageState extends State<HomePage> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
-                        spacing: 0,
                         children: [
                           Text(
                             'ประวัติคำสั่งซื้อ',
@@ -259,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                     return Card(
                       margin: const EdgeInsets.all(8),
                       child: Container(
-                        width: 130,
+                        width: 140,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
@@ -317,7 +317,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             // แสดงราคา
                             Row(
-                              spacing: 3,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Text(
                                   '${(product['Price'] + '/' + product['Unit']).substring(0, 10)}...',
@@ -373,7 +373,11 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   InkWell(
                     onTap: () {
-                      print("คลิกที่รูปภาพ!");
+                      Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ResultSearchPage(searchTerm: 'ปูนซีเมนต์'))
+                  );
+                      print("คลิกที่รูปภาพ! ปูน");
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
@@ -387,7 +391,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                   InkWell(
                     onTap: () {
-                      print("คลิกที่รูปภาพ!");
+                      print("คลิกที่รูปภาพ เหล็ก!");
+                      Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ResultSearchPage(searchTerm: 'เหล็ก'))
+                  );
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
@@ -408,9 +416,8 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: MyBottomNavBar(
         currentIndex: 0, // index ของ 'Home' จาก BottomNavigationBarItem
         onTap: (index) {
+          if (index == 0) return; // อยู่ที่หน้า Home แล้ว ไม่ต้องทำอะไร
           switch (index) {
-            case 0:
-              break;
             case 1:
               Navigator.pushNamed(context, '/search');
               break;

@@ -31,6 +31,92 @@ class _DetailPageState extends State<DetailPage> {
 
   List<dynamic> _products = [];
   String _statusMessage = "";
+  Future<void> _createOrUpdateOrder(int productId, int quantity) async {
+    // 1. เช็คว่ามี order ที่สถานะ "still in cart" หรือไม่
+    try {
+      final url = Uri.parse(
+        "${AppConfig.baseUrl}/orders",
+      ); // ใช้ API ของคุณในการดึง order ที่ยังค้าง
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> orders = json.decode(response.body);
+        // ค้นหา order ที่ยังค้างอยู่ใน cart
+        final inCartOrder = orders.firstWhere(
+          (order) => order['Status'] == 'still in cart',
+          orElse: () => null,
+        );
+        print(inCartOrder);
+
+        if (inCartOrder != null) {
+          // ถ้ามี order ที่ยังค้างอยู่ใน cart, เพิ่ม item ลงใน order
+          print('Found existing order, adding item...');
+          await _addItemToOrder(inCartOrder['OrderID'], productId, quantity);
+        } else {
+          // ถ้าไม่มี order ที่ยังค้าง, สร้าง order ใหม่
+          print('No existing order found, creating new order...');
+
+          await _createNewOrder(productId, quantity);
+        }
+      } else {
+        throw Exception('Failed to load orders');
+      }
+    } catch (e) {
+      print("Error: $e");
+      setState(() {
+        _statusMessage = "Error: $e";
+      });
+    }
+  }
+
+  Future<void> _addItemToOrder(int orderId, int productId, int quantity) async {
+    // เพิ่ม product item ลงใน order ที่มีอยู่แล้ว
+    final url = Uri.parse("${AppConfig.baseUrl}/order_items");
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'OrderID': orderId,
+        'ProductID': productId,
+        'Quantity': quantity,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      setState(() {
+        _statusMessage = 'Product added to existing order successfully';
+      });
+    } else {
+      setState(() {
+        _statusMessage = 'Failed to add item to order';
+      });
+    }
+  }
+
+  Future<void> _createNewOrder(int productId, int quantity) async {
+    // สร้าง order ใหม่
+    final url = Uri.parse("${AppConfig.baseUrl}/orders");
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'status':
+            'still in cart', // ตั้งสถานะเป็น 'still in cart' สำหรับ order ใหม่
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> newOrder = json.decode(response.body);
+      // เพิ่ม product item ลงใน order ใหม่
+      await _addItemToOrder(newOrder['OrderID'], productId, quantity);
+    } else {
+      setState(() {
+        _statusMessage = 'Failed to create new order';
+      });
+    }
+  }
 
   Future<void> _fetchProducts(int productid) async {
     final id = productid;
@@ -56,7 +142,7 @@ class _DetailPageState extends State<DetailPage> {
       });
     }
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -259,7 +345,36 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                     Spacer(),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        final productIdStr = _products[0]['ProductID']?.toString();
+                        print(productIdStr);
+                        if (productIdStr != null &&
+                            int.tryParse(productIdStr) != null) {
+                          int productId = int.parse(productIdStr);
+                          print('productId : $productId');
+                          _createOrUpdateOrder(productId, quantity);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${_products[0]['ProductName']} added to cart!',
+                              ),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        } else {
+                          // แสดงข้อความกรณีแปลงไม่ได้
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'ไม่สามารถเพิ่มสินค้าได้: productID ไม่ถูกต้อง',
+                              ),
+                              duration: Duration(seconds: 2),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
+
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.greenAccent[400],
                         padding: EdgeInsets.symmetric(
@@ -289,6 +404,7 @@ class _DetailPageState extends State<DetailPage> {
           onTap: (index) {
             switch (index) {
               case 0:
+                Navigator.pushReplacementNamed(context, '/home');
                 break;
               case 1:
                 Navigator.pushReplacementNamed(context, '/search');

@@ -205,6 +205,7 @@ class _ProfilePageState extends State<ProfilePage> {
       bottomNavigationBar: MyBottomNavBar(
         currentIndex: 4, // index ของ 'Home' จาก BottomNavigationBarItem
         onTap: (index) {
+          if (index == 4) return;
           switch (index) {
             case 0:
               Navigator.pushReplacementNamed(context, '/home');
@@ -217,8 +218,6 @@ class _ProfilePageState extends State<ProfilePage> {
               break;
             case 3:
               Navigator.pushReplacementNamed(context, '/history');
-              break;
-            case 4:
               break;
           }
         },

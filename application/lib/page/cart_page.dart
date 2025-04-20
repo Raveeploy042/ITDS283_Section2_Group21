@@ -61,7 +61,10 @@ class _CartPageState extends State<CartPage> {
         });
         await Future.delayed(Duration(seconds: 1));
         if (mounted) {
-          // Navigator.push(context, MaterialPageRoute(builder: ));
+          Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => InvoicePage(orderId: orderInCart!['OrderID'])),
+        );
         }
       } else {
         setState(() {
@@ -642,16 +645,15 @@ class _CartPageState extends State<CartPage> {
         ),
       ),
       bottomNavigationBar: MyBottomNavBar(
-        currentIndex: 2, // index ของ 'Home' จาก BottomNavigationBarItem
+        currentIndex: 2, // index ของ 'cart' จาก BottomNavigationBarItem
         onTap: (index) {
+          if (index == 2) return; // อยู่ที่หน้า cart แล้ว ไม่ต้องทำอะไร
           switch (index) {
             case 0:
               Navigator.pushNamed(context, '/home');
               break;
             case 1:
               Navigator.pushNamed(context, '/search');
-              break;
-            case 2:
               break;
             case 3:
               Navigator.pushNamed(context, '/history');

@@ -18,6 +18,7 @@ dependencies:
   dart_jsonwebtoken: ^2.0.1  # หรือเวอร์ชันล่าสุดที่รองรับ null safety
   shared_preferences: ^2.0.6
   jwt_decode: ^0.3.1
+  http_parser: ^4.0.2
 
 
 dev_dependencies:
@@ -34,6 +35,7 @@ flutter:
     - assets/Team02.jpg
     - assets/Cement_type.png
     - assets/Steel_type.png
+    - assets/tiger_cement.png
   
   fonts:
     - family: Inter

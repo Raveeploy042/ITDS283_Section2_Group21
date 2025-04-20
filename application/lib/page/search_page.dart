@@ -1,9 +1,11 @@
+import 'package:application/page/invoice_page.dart';
 import 'package:flutter/material.dart';
 import '/material/bottom_navbar.dart';
 import '/config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '/page/detail_page.dart';
+import '/page/result_search_page.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({super.key});
@@ -136,7 +138,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+     appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Color(0xFF3C40C6), size: 30),
           onPressed: () {
@@ -144,15 +146,26 @@ class _SearchPageState extends State<SearchPage> {
           },
         ),
         title: TextField(
+          controller: _searchController,
           decoration: InputDecoration(
-            suffixIcon: Icon(Icons.search, color: Color(0xFF3C40C6)),
+            suffixIcon: IconButton(
+              icon: Icon(Icons.search, color: Color(0xFF3C40C6)),
+              onPressed: () {
+                final value = _searchController.text;
+                if (value.isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ResultSearchPage(searchTerm: value))
+                  );
+                }
+                _searchController.clear();
+              },
+            ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color(0xFF3C40C6)),
               borderRadius: BorderRadius.circular(30),
             ),
-          ),
-          controller: _searchController,
-          onSubmitted: null,
+          )
         ),
       ),
       body: SingleChildScrollView(
@@ -188,11 +201,10 @@ class _SearchPageState extends State<SearchPage> {
       bottomNavigationBar: MyBottomNavBar(
         currentIndex: 1, // index ของ 'Home' จาก BottomNavigationBarItem
         onTap: (index) {
+          if (index == 1) return;
           switch (index) {
             case 0:
               Navigator.pushNamed(context, '/home');
-              break;
-            case 1:
               break;
             case 2:
               Navigator.pushNamed(context, '/cart');
@@ -210,140 +222,144 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Padding recommandProduct() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 8),
-    child: _products.isEmpty
-        ? Center(child: Text('ไม่พบข้อมูลสินค้า'))
-        : GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: _products.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.70,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-            ),
-            itemBuilder: (context, index) {
-              var product = _products[index];
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child:
+          _products.isEmpty
+              ? Center(child: Text('ไม่พบข้อมูลสินค้า'))
+              : GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _products.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.70,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
                 ),
-                elevation: 3,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      // ✅ รูปภาพสินค้า
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailPage(
-                                id: product['productID'],
+                itemBuilder: (context, index) {
+                  var product = _products[index];
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    elevation: 3,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white,
+                      ),
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          // ✅ รูปภาพสินค้า
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          DetailPage(id: product['productID']),
+                                ),
+                              );
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                height: 140,
+                                width: 120,
+                                color: Colors.grey[200],
+                                child:
+                                    product['ImageURL'] != null
+                                        ? Image.network(
+                                          product['ImageURL'],
+                                          fit: BoxFit.cover,
+                                        )
+                                        : const Icon(Icons.image, size: 64),
                               ),
                             ),
-                          );
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            height: 100,
-                            width: double.infinity,
-                            color: Colors.grey[200],
-                            child: product['ImageURL'] != null
-                                ? Image.network(
-                                    product['ImageURL'],
-                                    fit: BoxFit.cover,
-                                  )
-                                : const Icon(Icons.image, size: 64),
                           ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      // ✅ ชื่อสินค้า + ราคา + ปุ่ม
-                      Expanded(
-                        child: Stack(
-                          children: [
-                            // ✅ ชื่อสินค้าและราคาอยู่ชิดซ้าย
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                          const SizedBox(height: 8),
+                          // ✅ ชื่อสินค้า + ราคา + ปุ่ม
+                          Expanded(
+                            child: Stack(
                               children: [
-                                Text(
-                                  product['ProductName'],
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                  ),
+                                // ✅ ชื่อสินค้าและราคาอยู่ชิดซ้าย
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      product['ProductName'],
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      '${product['Price']}฿ / ${product['Unit']}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xFF3700FF),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  '${product['Price']}฿ / ${product['Unit']}',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Color(0xFF3700FF),
-                                    fontWeight: FontWeight.w600,
+                                // ✅ ปุ่มตะกร้าอยู่มุมขวาล่าง
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      int productId = product['productID'];
+                                      _createOrUpdateOrder(productId, 1);
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            '${product['ProductName']} added to cart!',
+                                          ),
+                                          duration: Duration(seconds: 1),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color(0xFFD9D9D9),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black12,
+                                            blurRadius: 5,
+                                            offset: Offset(2, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Icon(
+                                        Icons.add_shopping_cart,
+                                        color: Color(0xFF3C40C6),
+                                        size: 18,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                            // ✅ ปุ่มตะกร้าอยู่มุมขวาล่าง
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: GestureDetector(
-                                onTap: () {
-                                  int productId = product['productID'];
-                                  _createOrUpdateOrder(productId, 1);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        '${product['ProductName']} added to cart!',
-                                      ),
-                                      duration: Duration(seconds: 1),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(6),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xFFD9D9D9),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 5,
-                                        offset: Offset(2, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Icon(
-                                    Icons.add_shopping_cart,
-                                    color: Color(0xFF3C40C6),
-                                    size: 18,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-  );
-}
+                    ),
+                  );
+                },
+              ),
+    );
+  }
 }

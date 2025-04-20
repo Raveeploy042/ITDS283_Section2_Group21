@@ -8,7 +8,7 @@ void main(List<String> args) {
 
 class TeamPage extends StatelessWidget {
   const TeamPage({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,10 +17,10 @@ class TeamPage extends StatelessWidget {
         body: SingleChildScrollView(
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 50, 8 ,8),
+              padding: const EdgeInsets.fromLTRB(8.0, 50, 8, 8),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center, 
-                crossAxisAlignment: CrossAxisAlignment.center, 
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
@@ -29,8 +29,8 @@ class TeamPage extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontSize: 35,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black
-                    )
+                      color: Colors.black,
+                    ),
                   ),
                   SizedBox(height: 20),
                   CircleAvatar(
@@ -43,16 +43,16 @@ class TeamPage extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
-                      color: Colors.black
-                    )
+                      color: Colors.black,
+                    ),
                   ),
                   Text(
                     'Email: raveeploy.cha@student.mahidol.edu',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
-                      color: Colors.black
-                    )
+                      color: Colors.black,
+                    ),
                   ),
                   SizedBox(height: 30),
                   CircleAvatar(
@@ -65,7 +65,7 @@ class TeamPage extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
-                      color: Colors.black
+                      color: Colors.black,
                     ),
                   ),
                   Text(
@@ -73,8 +73,8 @@ class TeamPage extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
-                      color: Colors.black
-                    )
+                      color: Colors.black,
+                    ),
                   ),
                   SizedBox(height: 40),
                   TextButton(
@@ -82,53 +82,50 @@ class TeamPage extends StatelessWidget {
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.black,
                       backgroundColor: Color(0xFFD9D9D9),
-                      side: BorderSide(
-                        color: Color(0xFFD9D9D9)),
+                      side: BorderSide(color: Color(0xFFD9D9D9)),
                     ),
-                    child:
-                     
-                    ElevatedButton(
+                    child: ElevatedButton(
                       onPressed: () {
                         Navigator.pushReplacementNamed(context, '/home');
                       },
                       child: Text(
                         'กลับสู่หน้าหลัก',
-                        style: 
-                        TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 20,
-                          fontWeight: FontWeight.bold
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    )
-                  )
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
         ),
         bottomNavigationBar: MyBottomNavBar(
-        currentIndex: 4, // index ของ 'Home' จาก BottomNavigationBarItem
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Navigator.pushReplacementNamed(context, '/home');
-              break;
-            case 1:
-              Navigator.pushReplacementNamed(context, '/search');
-              break;
-            case 2:
-              Navigator.pushReplacementNamed(context, '/cart');
-              break;
-            case 3:
-              Navigator.pushReplacementNamed(context, '/history');
-              break;
-            case 4:
-              break;
-          }
-        },
+          currentIndex: 0, // index ของ 'Home' จาก BottomNavigationBarItem
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                Navigator.pushReplacementNamed(context, '/home');
+                break;
+              case 1:
+                Navigator.pushReplacementNamed(context, '/search');
+                break;
+              case 2:
+                Navigator.pushReplacementNamed(context, '/cart');
+                break;
+              case 3:
+                Navigator.pushReplacementNamed(context, '/home');
+                break;
+              case 4:
+                Navigator.pushReplacementNamed(context, '/profile');
+                break;
+            }
+          },
+        ),
       ),
-      )
     );
   }
 }

@@ -171,7 +171,7 @@ def get_searched_products(search_term):
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
-    SELECT ProductName, Type, Brand, Price, Unit, Location, ImageURL
+    SELECT ProductName, Type, Brand, Price, Unit, Location, ImageURL ,ProductID
     FROM products
     WHERE ProductName LIKE %s OR Type LIKE %s
     """, ('%' + search_term + '%', '%' + search_term + '%'))
@@ -191,7 +191,7 @@ def get_searched_orders(search_term):
 
     # คำสั่ง SQL ที่ค้นหาจาก CustomerName, OrderID, Address และ ProductName
     cursor.execute("""
-    SELECT o.OrderID, o.CustomerName, o.OrderDate, o.transport, o.Address, o.Status, p.ProductName
+    SELECT o.OrderID, o.CustomerName, o.OrderDate, o.transport, o.Address, o.Status, p.ProductName 
     FROM orders o
     JOIN order_items oi ON o.OrderID = oi.OrderID
     JOIN products p ON oi.ProductID = p.productID
