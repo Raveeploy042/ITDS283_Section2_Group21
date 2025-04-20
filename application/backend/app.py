@@ -151,8 +151,12 @@ def update_order(order_id):
     
     # ตรวจสอบข้อมูลที่จำเป็น
     name = data.get("CustomerName")
-    transport = data.get("Transport")
-    address = data.get("Address")
+    transport = data.get("transport")
+    if data.get("Address") :
+        address = data.get("Address")
+    else :
+        address = "รับเอง"
+
     status = data.get("Status")
     
     if not all([name, transport, address, status]):
@@ -193,6 +197,18 @@ def create_order_item():
     try:
         project_crud.create_order_item(order_id, product_id, quantity)
         return jsonify({"message": "Product added to order"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+# Get all items in a specific order
+@app.route('/order_all_items', methods=['GET'])
+def get_order_all_items():
+    try:
+        order_items = project_crud.get_all_order_item()
+        if order_items:
+            return jsonify(order_items), 200
+        else:
+            return jsonify({"message": "No items found for this order"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

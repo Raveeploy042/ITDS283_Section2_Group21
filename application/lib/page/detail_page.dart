@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '/material/custom_appbar.dart';
 import '/material/bottom_navbar.dart';
 import '/config.dart';
 import 'dart:convert';
@@ -57,7 +56,7 @@ class _DetailPageState extends State<DetailPage> {
       });
     }
   }
-
+  
   @override
   void initState() {
     super.initState();

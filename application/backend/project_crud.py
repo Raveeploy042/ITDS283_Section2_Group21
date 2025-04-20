@@ -1,5 +1,5 @@
 from db_config import get_connection
-
+from flask import jsonify
 def create_staff(name, username, password):
     conn = get_connection()
     cursor = conn.cursor()
@@ -122,11 +122,23 @@ def get_order_items(order_id):
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
-    SELECT oi.OrderItemID, p.ProductName, oi.Quantity, p.Price
-    FROM order_items oi
-    JOIN products p ON oi.ProductID = p.productID
-    WHERE oi.OrderID = %s
+        SELECT oi.OrderItemID, p.ProductName, oi.Quantity, p.Price ,p.ImageURL
+        FROM order_items oi
+        JOIN products p ON oi.ProductID = p.productID
+        WHERE oi.OrderID = %s
     """, (order_id,))
+    result = cursor.fetchall()
+    conn.close()
+    return result
+
+def get_all_order_item():
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT oi.OrderItemID, p.ProductName, oi.Quantity, p.Price , p.ImageURL
+        FROM order_items oi
+        JOIN products p ON oi.ProductID = p.productID
+    """,)
     result = cursor.fetchall()
     conn.close()
     return result
@@ -164,9 +176,14 @@ def get_searched_products(search_term):
     WHERE ProductName LIKE %s OR Type LIKE %s
     """, ('%' + search_term + '%', '%' + search_term + '%'))
     
-    result = cursor.fetchall()
+    result = []
+    for row in cursor:
+        result.append(row)  # row เป็น dict อยู่แล้ว เพราะใช้ dictionary=True
+
     conn.close()
+
     return result
+
 
 def get_searched_orders(search_term):
     conn = get_connection()
@@ -184,6 +201,10 @@ def get_searched_orders(search_term):
     OR p.ProductName LIKE %s
     """, ('%' + search_term + '%', '%' + search_term + '%', '%' + search_term + '%', '%' + search_term + '%'))
     
-    result = cursor.fetchall()
+    result = []
+    for row in cursor:
+        result.append(row)  # row เป็น dict อยู่แล้ว เพราะใช้ dictionary=True
+
     conn.close()
+
     return result

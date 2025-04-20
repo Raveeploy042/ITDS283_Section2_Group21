@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '/page/search_page.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
@@ -8,7 +8,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       backgroundColor: Color(0xFF3C40C6),
       title: GestureDetector(
-        onTap: null,
+        onTap: (){
+          Navigator.pushNamed(context, '/search');
+        },
         child: Container(
           height: 40,
           padding: EdgeInsets.symmetric(horizontal: 12),
