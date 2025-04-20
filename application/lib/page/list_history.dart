@@ -24,7 +24,7 @@ class _ListHistoryState extends State<ListHistory> {
           'deliveryUser': 'จีนเอฟพื้นนิริน',
           'itemCount': 3,
           'products': [
-            'ผู้แทนโครงสร้าง SCG... (2)',
+            'ปูนงานโครงสร้าง SCG... (2)',
             'เหล็กเส้นกลม... (1)',
             'อิฐมวล... (10)',
           ],
@@ -209,7 +209,7 @@ class _ListHistoryState extends State<ListHistory> {
                                           Text(
                                             'Order No. ${order['orderNo']}',
                                             style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
                                               color: Colors.white,
                                             ),
                                           ),
@@ -218,22 +218,22 @@ class _ListHistoryState extends State<ListHistory> {
                                       const SizedBox(height: 8),
                                       Text(
                                         'ชื่อลูกค้า : ${order['customer']}',
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
                                       ),
                                       Text(
                                         'ผู้จัดส่ง : ${order['deliveryUser']}',
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(color: Colors.white, fontSize: 12),
                                       ),
                                       Text(
                                         'จำนวนสินค้า ${order['itemCount']} รายการ',
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
                                       ),
-                                      const SizedBox(height: 8),
+                                      const SizedBox(height: 2),
                                       ...order['products']
                                           .take(2)
-                                          .map<Widget>((p) => Text('• $p', style: TextStyle(color: Colors.white))),
+                                          .map<Widget>((p) => Text('  • $p', style: TextStyle(color: Colors.white))),
                                       if (order['products'].length > 2)
-                                        const Text('• ...', style: TextStyle(color: Colors.white)),
+                                        const Text('  • ...', style: TextStyle(color: Colors.white, fontSize: 12)),
                                       Row(
                                         spacing: 10,
                                         mainAxisAlignment: MainAxisAlignment.end,
@@ -242,7 +242,7 @@ class _ListHistoryState extends State<ListHistory> {
                                             'ยอดรวม',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 16,
+                                              fontSize: 20,
                                               color: Colors.white,
                                             ),
                                           ),
@@ -250,7 +250,7 @@ class _ListHistoryState extends State<ListHistory> {
                                             '${order['total'].toStringAsFixed(2)}฿',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 16,
+                                              fontSize: 24,
                                               color: Colors.white,
                                             ),
                                           ),
