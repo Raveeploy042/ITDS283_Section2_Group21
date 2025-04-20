@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import '/material/custom_appbar.dart';
+import '/material/bottom_navbar.dart';
+import '/config.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatelessWidget{
   const ProfilePage ({super.key});

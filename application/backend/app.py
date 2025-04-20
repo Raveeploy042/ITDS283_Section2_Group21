@@ -189,6 +189,36 @@ def delete_order_item(order_item_id):
         return jsonify({"error": str(e)}), 500
 
 # -------------------------------
+# Search order
+# -------------------------------
+@app.route('/search/orders', methods=['GET'])
+def search_orders():
+    search_term = request.args.get('search_term', '')  # รับคำค้นหาจาก URL query parameter
+    try:
+        orders = project_crud.get_searched_orders(search_term)
+        if orders:
+            return jsonify(orders), 200
+        else:
+            return jsonify({"message": "No orders found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+    
+# -------------------------------
+# Search Product
+# -------------------------------
+@app.route('/search/products', methods=['GET'])
+def search_products():
+    search_term = request.args.get('search_term', '')  # รับคำค้นหาจาก URL query parameter
+    try:
+        products = project_crud.get_searched_products(search_term)
+        if products:
+            return jsonify(products), 200
+        else:
+            return jsonify({"message": "No products found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+# -------------------------------
 # Main
 # -------------------------------
 if __name__ == '__main__':

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '/material/custom_appbar.dart';
+import '/material/bottom_navbar.dart';
 
 void main(List<String> args) {
   runApp(TeamPage());
@@ -11,9 +13,7 @@ class TeamPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xFF3C40C6),
-        ),
+        appBar: CustomAppBar(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, 

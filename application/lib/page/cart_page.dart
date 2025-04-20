@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import '/page/map_page.dart';
+import '/material/bottom_navbar.dart';
+import '/config.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -119,15 +123,15 @@ class _CartPageState extends State<CartPage> {
                   width: 2
                   ),
                 borderRadius: BorderRadius.circular(8)
-                )
-              ),
-              child: Padding(
+                ),
+                child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: Text(
                 'ชื่อลูกค้า : คุณทฤษฎี',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
+              ),
             ),
             SizedBox(height: 20),
             // ประเภทการจัดส่ง

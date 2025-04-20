@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import '/material/custom_appbar.dart';
+import '/material/bottom_navbar.dart';
+import '/config.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key});
@@ -213,6 +218,27 @@ class _DetailPageState extends State<DetailPage> {
             ],
           ),
         ),
+        bottomNavigationBar: MyBottomNavBar(
+        currentIndex: 0, // index ของ 'Home' จาก BottomNavigationBarItem
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              break;
+            case 1:
+              Navigator.pushReplacementNamed(context, '/search');
+              break;
+            case 2:
+              Navigator.pushReplacementNamed(context, '/cart');
+              break;
+            case 3:
+              Navigator.pushReplacementNamed(context, '/home');
+              break;
+            case 4:
+              Navigator.pushReplacementNamed(context, '/profile');
+              break;
+          }
+        },
+      ),
       ),
     );
   }

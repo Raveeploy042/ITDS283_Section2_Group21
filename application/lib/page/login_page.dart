@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '/config.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,21 +14,45 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   // ฟังก์ชันสำหรับตรวจสอบการยืนยันตัวตน
-  void _login() {
-    String username = _usernameController.text;
-    String password = _passwordController.text;
+  Future<void> _login() async {
+      String username = _usernameController.text;
+      String password = _passwordController.text;
 
-    // ตรวจสอบว่า username หรือ password ว่างหรือไม่
-    if (username.isEmpty || password.isEmpty) {
-      _showDialog('กรุณากรอกข้อมูลให้ครบถ้วน');
-    } else if (username == 'admin' && password == 'password123') {
-      // ถ้าข้อมูลตรงกับที่กำหนด (สามารถเปลี่ยนเป็นการตรวจสอบจาก API ได้)
-      _showDialog('เข้าสู่ระบบสำเร็จ!');
-    } else {
-      // หากข้อมูลไม่ตรง
-      _showDialog('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+      // ตรวจสอบว่า username หรือ password ว่างหรือไม่
+      if (username.isEmpty || password.isEmpty) {
+        _showDialog('กรุณากรอกข้อมูลให้ครบถ้วน');
+      } else {
+        try {
+          // ส่งคำขอ POST ไปยัง API เพื่อตรวจสอบ username และ password
+          final response = await http.post(
+            Uri.parse('http://your-api-url.com/login'),  // เปลี่ยน URL ให้ตรงกับ API ของคุณ
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'username': username,
+              'password': password,
+            }),
+          );
+
+          // ถ้าคำขอสำเร็จ
+          if (response.statusCode == 200) {
+            final data = json.decode(response.body);
+            if (data['message'] == 'Login successful') {
+              // ถ้าการเข้าสู่ระบบสำเร็จ
+              _showDialog('เข้าสู่ระบบสำเร็จ!');
+            } else {
+              // ถ้าชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง
+              _showDialog('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+            }
+          } else {
+            // ถ้าระบบเกิดข้อผิดพลาดในการเชื่อมต่อกับ API
+            _showDialog('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์');
+          }
+        } catch (e) {
+          // หากเกิดข้อผิดพลาดในการส่งคำขอ
+          _showDialog('เกิดข้อผิดพลาด: ${e.toString()}');
+        }
+      }
     }
-  }
 
   // ฟังก์ชันสำหรับแสดง AlertDialog
   void _showDialog(String message) {

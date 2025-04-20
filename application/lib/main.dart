@@ -11,6 +11,7 @@ import '/page/profile_page.dart';
 import '/page/register_page.dart';
 import '/page/team_page.dart';
 import '/page/Welcome.dart';
+import '/page/search_page.dart';
 
 void main(List<String> args) async{
   runApp(const MyApp());
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
+        '/search' : (context) => SearchPage(),
         '/map': (context) => MapPage(),
         '/invoice': (context) => InvoicePage(),
         '/history': (context) => ListHistory(),
