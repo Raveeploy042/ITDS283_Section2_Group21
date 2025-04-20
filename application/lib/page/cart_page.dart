@@ -43,14 +43,28 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
+  void increaseQty(int index) {
+    setState(() {
+      _products[index]['quantity']++;
+    });
+  }
+
+  void decreaseQty(int index) {
+    setState(() {
+      if (_products[index]['quantity'] > 1) {
+        _products[index]['quantity']--;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, size: 40, color: Color(0xFF3C40C6)),
+          icon: const Icon(Icons.arrow_back, size: 40, color: Color(0xFF3C40C6)),
           onPressed: () {
-            Navigator.pop(context); // or your custom logic
+            Navigator.pop(context);
           },
         ),
         title: const Text(
@@ -64,7 +78,6 @@ class _CartPageState extends State<CartPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // รายการสินค้า
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -83,7 +96,6 @@ class _CartPageState extends State<CartPage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // รูปสินค้า
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.asset(
@@ -94,12 +106,9 @@ class _CartPageState extends State<CartPage> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      // รายละเอียดสินค้า
                       Expanded(
-                        flex: 4,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               item['name'],
@@ -118,48 +127,87 @@ class _CartPageState extends State<CartPage> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              '${item['price']} B/หน่วย',
+                              '${item['price']}฿/ถุง',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 20
+                                fontSize: 18,
                               ),
+                            ),
+                            const Spacer(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'จำนวน',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                GestureDetector(
+                                  onTap: () => decreaseQty(index),
+                                  child: CircleAvatar(
+                                    radius: 12,
+                                    backgroundColor: Colors.grey[300],
+                                    child: const Icon(Icons.remove, color: Colors.black, size: 16),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '${item['quantity']}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                GestureDetector(
+                                  onTap: () => increaseQty(index),
+                                  child: CircleAvatar(
+                                    radius: 12,
+                                    backgroundColor: Colors.grey[300],
+                                    child: const Icon(Icons.add, color: Colors.black, size: 16),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                      // จำนวน
-                      Expanded(
-                        flex: 2,
-                        child: Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'จำนวน ${item['quantity']}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
+                      Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  _products.removeAt(index);
+                                });
+                              },
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
                 );
               },
             ),
-
-            SizedBox(height: 20),
-            // ข้อมูลลูกค้า
+            const SizedBox(height: 20),
             SizedBox(
               height: 42,
               width: 240,
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: Color(0xFFEEEEEE),
+                  color: const Color(0xFFEEEEEE),
                   border: Border.all(color: Colors.grey, width: 2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Padding(
+                child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: Text(
                     'ชื่อลูกค้า : คุณทฤษฎี',
@@ -168,8 +216,7 @@ class _CartPageState extends State<CartPage> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            // ประเภทการจัดส่ง
+            const SizedBox(height: 20),
             const Text(
               'ประเภทการจัดส่ง',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -178,8 +225,7 @@ class _CartPageState extends State<CartPage> {
               title: const Text('รับสินค้าที่หน้าร้าน'),
               value: 'pickup',
               groupValue: _deliveryOption,
-              onChanged:
-                  (value) => setState(() => _deliveryOption = value.toString()),
+              onChanged: (value) => setState(() => _deliveryOption = value.toString()),
             ),
             RadioListTile(
               title: const Text('บริการจัดส่งสินค้า'),
@@ -187,12 +233,10 @@ class _CartPageState extends State<CartPage> {
               groupValue: _deliveryOption,
               onChanged: (value) async {
                 setState(() => _deliveryOption = value.toString());
-
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MapPage()),
                 );
-
                 if (result != null && result is String) {
                   setState(() => _deliveryAddress = result);
                 }
@@ -207,7 +251,6 @@ class _CartPageState extends State<CartPage> {
                       context,
                       MaterialPageRoute(builder: (context) => MapPage()),
                     );
-
                     if (result != null && result is String) {
                       setState(() => _deliveryAddress = result);
                     }
@@ -215,10 +258,7 @@ class _CartPageState extends State<CartPage> {
                   child: Text('สถานที่: $_deliveryAddress'),
                 ),
               ),
-
             const SizedBox(height: 20),
-
-            // สรุปคำสั่งซื้อ
             Container(
               color: const Color(0xFF3C40C6),
               width: double.infinity,
@@ -239,76 +279,39 @@ class _CartPageState extends State<CartPage> {
                   const SizedBox(height: 10),
                   Container(
                     color: Colors.grey[300],
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 8,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                     child: const Row(
                       children: [
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            'จำนวน',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Text(
-                            'สินค้า',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                        Expanded(flex: 1, child: Text('จำนวน', style: TextStyle(fontWeight: FontWeight.bold))),
+                        Expanded(flex: 4, child: Text('สินค้า', style: TextStyle(fontWeight: FontWeight.bold))),
                         Expanded(
                           flex: 2,
-                          child: Text(
-                            'ราคา',
-                            textAlign: TextAlign.end,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                          child: Text('ราคา', textAlign: TextAlign.end, style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),
                   ),
                   ..._products.map(
                     (item) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 8,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                       child: Row(
                         children: [
                           Expanded(
                             flex: 1,
-                            child: Text(
-                              '${item['quantity']}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            child: Text('${item['quantity']}',
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                           ),
                           Expanded(
                             flex: 4,
-                            child: Text(
-                              item['name'],
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            child: Text(item['name'],
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                           ),
                           Expanded(
                             flex: 2,
-                            child: Text(
-                              '${item['price'] * item['quantity']} B',
-                              textAlign: TextAlign.end,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            child: Text('${item['price'] * item['quantity']} B',
+                                textAlign: TextAlign.end,
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                           ),
                         ],
                       ),
@@ -326,15 +329,12 @@ class _CartPageState extends State<CartPage> {
                 ],
               ),
             ),
-
             const SizedBox(height: 30),
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
+                    style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
                     onPressed: () {},
                     child: const Text('ยกเลิกรายการทั้งหมด'),
                   ),
@@ -344,7 +344,7 @@ class _CartPageState extends State<CartPage> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shadowColor: Colors.black.withAlpha(255),
-                      backgroundColor: Color(0xFF0BE881),
+                      backgroundColor: const Color(0xFF0BE881),
                     ),
                     onPressed: () {},
                     child: const Text('ยืนยันคำสั่งซื้อ'),
